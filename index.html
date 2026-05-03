@@ -6,209 +6,283 @@
     <title>CANAAN Vet | Enterprise Medical System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .hidden-section { display: none !important; }
-        .sidebar-link:hover { background: #1e293b; border-left: 4px solid #3b82f6; }
-        .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
+        .sidebar-link { transition: all 0.3s; cursor: pointer; border-radius: 12px; }
+        .sidebar-link:hover, .active-nav { background: #2563eb; color: white; box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4); }
+        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
 
     <!-- ==========================================
-         LANDING PAGE (PÚBLICA)
+         LANDING PAGE VETERINARIA PRO
          ========================================== -->
-    <div id="view-landing">
-        <nav class="fixed w-full z-50 glass border-b px-8 py-4 flex justify-between items-center">
+    <div id="view-landing" class="relative">
+        <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md px-12 py-4 flex justify-between items-center border-b">
             <div class="flex items-center gap-2">
-                <i class="fas fa-paw text-blue-600 text-2xl"></i>
+                <i class="fas fa-heart-pulse text-blue-600 text-2xl"></i>
                 <span class="text-2xl font-black italic">CANAAN <span class="text-blue-600">VET</span></span>
             </div>
-            <div class="flex gap-6">
-                <button onclick="openLogin()" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold shadow-lg hover:bg-blue-700 transition">Ingresar al Portal</button>
-            </div>
+            <button onclick="toggleModal('modal-auth')" class="bg-slate-900 text-white px-8 py-3 rounded-2xl font-bold hover:bg-blue-600 transition">Portal Clínico</button>
         </nav>
 
-        <section class="pt-32 pb-20 px-8 bg-gradient-to-br from-blue-50 to-white">
+        <section class="pt-48 pb-20 px-12 bg-gradient-to-b from-blue-50 to-white">
             <div class="container mx-auto grid md:grid-cols-2 gap-12 items-center">
-                <div>
-                    <h1 class="text-6xl font-black leading-tight mb-6">Cuidamos lo que <span class="text-blue-600">más amas</span> con tecnología.</h1>
-                    <p class="text-xl text-slate-500 mb-8 italic">Más de 10 especialidades médicas, cirugía avanzada y expediente digital en la palma de tu mano.</p>
-                    <button onclick="openLogin()" class="bg-slate-900 text-white px-10 py-5 rounded-2xl font-black text-xl hover:bg-slate-800 shadow-2xl">REGISTRAR MI MASCOTA</button>
+                <div class="space-y-6">
+                    <h1 class="text-7xl font-black leading-tight tracking-tighter">Hospital <span class="text-blue-600">Especializado</span> de Alta Complejidad.</h1>
+                    <p class="text-xl text-slate-500">Más de 10 servicios médicos avanzados con expediente digital y comunicación directa con su especialista.</p>
+                    <div class="flex gap-4">
+                        <button onclick="toggleModal('modal-auth')" class="bg-blue-600 text-white px-10 py-5 rounded-3xl font-black text-xl shadow-2xl hover:scale-105 transition">AGENDAR CITA AHORA</button>
+                    </div>
                 </div>
-                <img src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?auto=format&fit=crop&q=80&w=800" class="rounded-[3rem] shadow-2xl border-[12px] border-white">
-            </div>
-        </section>
-
-        <!-- Sección de Servicios Expandida -->
-        <section class="py-20 bg-white px-8">
-            <h2 class="text-center text-4xl font-black mb-16">Nuestros Servicios Especializados</h2>
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-6 container mx-auto">
-                <div class="p-6 bg-slate-50 rounded-3xl text-center border hover:border-blue-500 transition cursor-default">
-                    <i class="fas fa-stethoscope text-blue-600 text-3xl mb-4"></i>
-                    <p class="font-bold text-sm uppercase">Consulta General</p>
-                </div>
-                <!-- Repetir para 10 servicios -->
-                <div class="p-6 bg-slate-50 rounded-3xl text-center border hover:border-blue-500 transition">
-                    <i class="fas fa-syringe text-blue-600 text-3xl mb-4"></i>
-                    <p class="font-bold text-sm uppercase">Vacunación</p>
-                </div>
-                <div class="p-6 bg-slate-50 rounded-3xl text-center border hover:border-blue-500 transition">
-                    <i class="fas fa-bones text-blue-600 text-3xl mb-4"></i>
-                    <p class="font-bold text-sm uppercase">Rayos X</p>
-                </div>
-                <div class="p-6 bg-slate-50 rounded-3xl text-center border hover:border-blue-500 transition">
-                    <i class="fas fa-microscope text-blue-600 text-3xl mb-4"></i>
-                    <p class="font-bold text-sm uppercase">Laboratorio</p>
-                </div>
-                <div class="p-6 bg-slate-50 rounded-3xl text-center border hover:border-blue-500 transition">
-                    <i class="fas fa-cut text-blue-600 text-3xl mb-4"></i>
-                    <p class="font-bold text-sm uppercase">Cirugía</p>
-                </div>
+                <img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&q=80&w=800" class="rounded-[4rem] shadow-2xl border-[15px] border-white">
             </div>
         </section>
     </div>
 
     <!-- ==========================================
-         LOGIN MODAL
+         SISTEMA ADMIN / MÉDICO / JEFE
          ========================================== -->
-    <div id="login-modal" class="fixed inset-0 z-[100] hidden bg-slate-900/90 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="bg-white p-10 rounded-[2.5rem] max-w-md w-full shadow-2xl">
-            <h2 class="text-3xl font-black text-center mb-8">Acceso Canaan</h2>
-            <div class="space-y-4">
-                <input type="email" id="user-email" placeholder="Correo Electrónico" class="w-full border-2 p-4 rounded-xl focus:border-blue-600 outline-none font-bold">
-                <input type="password" id="user-pass" placeholder="Contraseña" class="w-full border-2 p-4 rounded-xl focus:border-blue-600 outline-none font-bold">
-                <button onclick="handleLogin()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black text-xl hover:bg-blue-700 transition">ENTRAR</button>
-                <button onclick="closeLogin()" class="w-full text-slate-400 font-bold py-2">Cerrar</button>
+    <div id="view-system" class="hidden-section flex min-h-screen">
+        <!-- Sidebar Dinámico -->
+        <aside class="w-80 bg-slate-900 text-slate-400 p-8 flex flex-col fixed h-full shadow-2xl">
+            <div class="mb-12 flex items-center gap-2 text-white">
+                <i class="fas fa-microscope text-blue-500"></i>
+                <span class="text-xl font-black italic uppercase">CANAAN <span class="text-blue-500 text-sm">OS</span></span>
             </div>
-        </div>
-    </div>
-
-    <!-- ==========================================
-         DASHBOARD ADMIN / JEFE / VET
-         ========================================== -->
-    <div id="view-admin" class="hidden-section flex min-h-screen">
-        <!-- Sidebar Estratégico -->
-        <aside class="w-72 bg-slate-900 text-white p-6 flex flex-col fixed h-full">
-            <div class="mb-10 text-xl font-black italic uppercase tracking-tighter">CANAAN <span class="text-blue-500">PRO OS</span></div>
-            <nav class="flex-1 space-y-1">
-                <div class="sidebar-link p-4 rounded-xl cursor-pointer flex items-center gap-3"><i class="fas fa-chart-pie w-6"></i> Dashboard</div>
-                <div class="sidebar-link p-4 rounded-xl cursor-pointer flex items-center gap-3"><i class="fas fa-paw w-6"></i> Pacientes</div>
-                <div class="sidebar-link p-4 rounded-xl cursor-pointer flex items-center gap-3"><i class="fas fa-calendar-day w-6"></i> Citas del Día</div>
-                <div class="sidebar-link p-4 rounded-xl cursor-pointer flex items-center gap-3"><i class="fas fa-notes-medical w-6"></i> Historial Intervenciones</div>
-                <div class="sidebar-link p-4 rounded-xl cursor-pointer flex items-center gap-3"><i class="fas fa-hand-holding-dollar w-6"></i> Arreglo de Pago</div>
-                <div class="sidebar-link p-4 rounded-xl cursor-pointer flex items-center gap-3"><i class="fas fa-truck-ramp-box w-6"></i> Proveedores</div>
-                <div class="sidebar-link p-4 rounded-xl cursor-pointer flex items-center gap-3"><i class="fas fa-paper-plane w-6"></i> Envíos</div>
+            <nav id="sidebar-nav" class="flex-1 space-y-2">
+                <!-- Se llena por JS según el rol -->
             </nav>
-            <button onclick="location.reload()" class="p-4 text-red-400 font-bold hover:bg-red-900/20 rounded-xl"><i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión</button>
+            <div class="mt-auto pt-8 border-t border-slate-800">
+                <button onclick="location.reload()" class="text-red-400 font-bold hover:text-red-200"><i class="fas fa-sign-out-alt mr-2"></i> Salir del Sistema</button>
+            </div>
         </aside>
 
-        <!-- Main Panel -->
-        <main class="ml-72 flex-1 p-10 bg-slate-50">
-            <header class="flex justify-between items-center mb-10">
-                <h2 id="admin-title" class="text-3xl font-black">Panel General de Control</h2>
-                <div class="flex gap-4">
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border px-8">
-                        <p class="text-xs font-bold text-slate-400 uppercase">Estado Sistema</p>
-                        <p class="text-green-600 font-black">Operativo (6 Médicos)</p>
+        <!-- Contenedor de Ventanas -->
+        <main class="flex-1 ml-80 p-12 overflow-y-auto h-screen">
+            <header class="flex justify-between items-center mb-12">
+                <h2 id="window-title" class="text-4xl font-black italic">Dashboard Principal</h2>
+                <div id="user-badge" class="flex items-center gap-4 bg-white p-3 px-6 rounded-2xl border shadow-sm">
+                    <div class="text-right">
+                        <p id="profile-display-name" class="font-black text-sm uppercase">Cargando...</p>
+                        <p id="profile-role" class="text-[10px] text-blue-600 font-bold uppercase tracking-widest"></p>
                     </div>
+                    <img src="https://i.pravatar.cc/100" class="w-10 h-10 rounded-full border-2 border-blue-600">
                 </div>
             </header>
 
-            <div class="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <table class="w-full text-left">
-                    <thead class="bg-slate-900 text-white text-xs font-bold uppercase">
-                        <tr>
-                            <th class="p-6">Mascota / Dueño</th>
-                            <th class="p-6">Especialista</th>
-                            <th class="p-6">Próxima Cita</th>
-                            <th class="p-6">Estado Pago</th>
-                            <th class="p-6">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="admin-table">
-                        <tr class="border-b hover:bg-slate-50">
-                            <td class="p-6 font-bold">Max (Golden) <br> <span class="text-xs text-slate-400 font-normal">Juan Perez</span></td>
-                            <td class="p-6 text-sm">Dr. Canaan</td>
-                            <td class="p-6 font-black text-blue-600">Hoy 2:00 PM</td>
-                            <td class="p-6"><span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold">Pagado SINPE</span></td>
-                            <td class="p-6"><button class="text-blue-600 font-bold">Ver Expediente</button></td>
-                        </tr>
-                        <!-- Se repite dinámicamente -->
-                    </tbody>
-                </table>
+            <div id="content-area">
+                <!-- El contenido de las ventanas se inyecta aquí -->
             </div>
         </main>
     </div>
 
     <!-- ==========================================
-         PORTAL DEL CLIENTE
+         MODALES Y LOGICA
          ========================================== -->
-    <div id="view-client" class="hidden-section bg-slate-100 min-h-screen p-10">
-        <div class="max-w-5xl mx-auto">
-            <header class="flex justify-between items-center mb-12">
-                <h2 class="text-4xl font-black italic">Mi Mascota <span class="text-blue-600">Canaan</span></h2>
-                <button onclick="location.reload()" class="bg-white px-6 py-2 rounded-xl font-bold shadow-sm">Salir</button>
-            </header>
-
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Perfil Mascota -->
-                <div class="md:col-span-2 bg-white p-10 rounded-[3rem] shadow-xl relative overflow-hidden border-b-8 border-blue-600">
-                    <div class="flex items-center gap-6 mb-10">
-                        <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=200" class="w-32 h-32 rounded-3xl shadow-lg">
-                        <div>
-                            <h3 class="text-5xl font-black">MAX</h3>
-                            <p class="text-blue-600 font-bold">Golden Retriever • 4 Años</p>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-slate-50 p-6 rounded-2xl border">
-                            <p class="text-xs font-black text-slate-400 uppercase">Última Observación</p>
-                            <p class="font-bold">"Presenta leve inflamación en encía. Se receta limpieza dental."</p>
-                        </div>
-                        <div class="bg-slate-50 p-6 rounded-2xl border">
-                            <p class="text-xs font-black text-slate-400 uppercase">Médico de Cabecera</p>
-                            <p class="font-bold text-blue-600">Dr. Roberto (Vet #3)</p>
-                            <button class="mt-2 text-xs bg-slate-900 text-white px-3 py-1 rounded-lg">Chatear con Médico</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Calendario y Citas -->
-                <div class="bg-slate-900 text-white p-8 rounded-[3rem] shadow-2xl">
-                    <h4 class="text-xl font-bold mb-6"><i class="fas fa-calendar-alt mr-2 text-blue-500"></i> Agenda Tu Cita</h4>
-                    <input type="date" class="w-full bg-slate-800 border-none p-4 rounded-xl mb-4 text-white">
-                    <button class="w-full bg-blue-600 p-4 rounded-xl font-black uppercase text-sm shadow-lg hover:bg-blue-700 transition">Buscar Disponibilidad</button>
-                    <div class="mt-8 border-t border-slate-700 pt-6">
-                        <p class="text-xs font-bold text-slate-400 mb-2">PRÓXIMO REFUERZO</p>
-                        <p class="text-xl font-black text-amber-400">Vacuna Rabia: 15/06</p>
-                    </div>
-                </div>
+    <div id="modal-auth" class="fixed inset-0 z-[100] hidden bg-slate-900/90 backdrop-blur-md flex items-center justify-center p-6">
+        <div class="bg-white rounded-[3rem] p-12 max-w-md w-full">
+            <h2 class="text-3xl font-black text-center mb-8 uppercase italic">Acceso <span class="text-blue-600">Canaan</span></h2>
+            <div class="space-y-4">
+                <input type="email" id="input-user" placeholder="Correo (ej: jefe@canaan.com)" class="w-full bg-slate-100 p-5 rounded-2xl outline-none border-2 focus:border-blue-600 font-bold">
+                <input type="password" id="input-pass" placeholder="Contraseña" class="w-full bg-slate-100 p-5 rounded-2xl outline-none border-2 focus:border-blue-600 font-bold">
+                <button onclick="handleLogin()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-xl">INGRESAR</button>
+                <button onclick="toggleModal('modal-auth')" class="w-full text-slate-400 font-bold text-sm">Cancelar</button>
             </div>
         </div>
     </div>
 
     <script>
-        function openLogin() { document.getElementById('login-modal').classList.remove('hidden'); }
-        function closeLogin() { document.getElementById('login-modal').classList.add('hidden'); }
+        let currentUser = null;
+
+        const ROLES = {
+            JEFE: 'JEFE',
+            MEDICO: 'MEDICO',
+            CLIENTE: 'CLIENTE'
+        };
+
+        function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
 
         function handleLogin() {
-            const email = document.getElementById('user-email').value;
-            const pass = document.getElementById('user-pass').value;
+            const user = document.getElementById('input-user').value;
+            const pass = document.getElementById('input-pass').value;
+
+            if(user === 'jefe@canaan.com' && pass === 'MasterAdmin2026') currentUser = { role: ROLES.JEFE, name: 'Administrador Jefe' };
+            else if(user === 'medico1@canaan.com' && pass === 'VetCanaan01') currentUser = { role: ROLES.MEDICO, name: 'Dr. Roberto Vargas' };
+            else if(user === 'cliente@mascota.com' && pass === 'Mascota2026') currentUser = { role: ROLES.CLIENTE, name: 'Juan Perez' };
+            else return alert("Datos incorrectos");
 
             document.getElementById('view-landing').classList.add('hidden-section');
-            closeLogin();
+            document.getElementById('view-system').classList.remove('hidden-section');
+            toggleModal('modal-auth');
+            initSystem();
+        }
 
-            if(email === 'jefe@canaan.com') {
-                document.getElementById('view-admin').classList.remove('hidden-section');
-                document.getElementById('admin-title').innerText = "Dashboard Principal (Modo Jefe)";
-            } else if(email.includes('medico')) {
-                document.getElementById('view-admin').classList.remove('hidden-section');
-                document.getElementById('admin-title').innerText = "Portal Médico (Veterinario)";
+        function initSystem() {
+            document.getElementById('profile-display-name').innerText = currentUser.name;
+            document.getElementById('profile-role').innerText = currentUser.role;
+            renderSidebar();
+            loadWindow('dashboard');
+        }
+
+        function renderSidebar() {
+            const nav = document.getElementById('sidebar-nav');
+            let links = [];
+
+            if(currentUser.role === ROLES.JEFE) {
+                links = [
+                    { id: 'dashboard', icon: 'fa-chart-line', label: 'Dashboard General' },
+                    { id: 'rendimiento', icon: 'fa-user-tie', label: 'Rendimiento Médicos' },
+                    { id: 'proveedores', icon: 'fa-truck-ramp-box', label: 'Proveedores' },
+                    { id: 'pagos', icon: 'fa-file-invoice-dollar', label: 'Arreglos de Pago' },
+                    { id: 'envios', icon: 'fa-paper-plane', label: 'Envíos Logística' },
+                    { id: 'perfil', icon: 'fa-user-gear', label: 'Mi Perfil' }
+                ];
+            } else if(currentUser.role === ROLES.MEDICO) {
+                links = [
+                    { id: 'citas', icon: 'fa-calendar-day', label: 'Citas del Día' },
+                    { id: 'pacientes', icon: 'fa-paw', label: 'Mis Pacientes' },
+                    { id: 'intervenciones', icon: 'fa-notes-medical', label: 'Historial Intervenciones' },
+                    { id: 'perfil', icon: 'fa-user-gear', label: 'Mi Perfil' }
+                ];
             } else {
-                document.getElementById('view-client').classList.remove('hidden-section');
+                links = [
+                    { id: 'mascota', icon: 'fa-dog', label: 'Mi Mascota' },
+                    { id: 'agendar', icon: 'fa-calendar-plus', label: 'Reservar Cita' },
+                    { id: 'historial', icon: 'fa-book-medical', label: 'Mis Observaciones' },
+                    { id: 'perfil', icon: 'fa-user-gear', label: 'Mi Perfil' }
+                ];
             }
+
+            nav.innerHTML = links.map(link => `
+                <div onclick="loadWindow('${link.id}')" class="sidebar-link p-4 flex items-center gap-4 font-bold">
+                    <i class="fas ${link.icon} w-6"></i> ${link.label}
+                </div>
+            `).join('');
+        }
+
+        function loadWindow(id) {
+            const content = document.getElementById('content-area');
+            const title = document.getElementById('window-title');
+            
+            let html = '';
+            
+            switch(id) {
+                case 'dashboard':
+                    title.innerText = "Dashboard General";
+                    html = `
+                        <div class="grid grid-cols-3 gap-6">
+                            <div class="bg-white p-8 rounded-3xl border shadow-sm">
+                                <p class="text-xs font-black text-slate-400 uppercase">Caja del Día</p>
+                                <p class="text-3xl font-black text-blue-600">₡975,000</p>
+                            </div>
+                            <div class="bg-white p-8 rounded-3xl border shadow-sm">
+                                <p class="text-xs font-black text-slate-400 uppercase">Citas Completadas</p>
+                                <p class="text-3xl font-black">12/15</p>
+                            </div>
+                            <div class="bg-white p-8 rounded-3xl border shadow-sm">
+                                <p class="text-xs font-black text-slate-400 uppercase">Pacientes en Observación</p>
+                                <p class="text-3xl font-black text-amber-600">4</p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'rendimiento':
+                    title.innerText = "Rendimiento de Empleados";
+                    html = `
+                        <div class="bg-white rounded-3xl border overflow-hidden">
+                            <table class="w-full text-left">
+                                <thead class="bg-slate-50 text-xs font-black uppercase">
+                                    <tr><th class="p-6">Médico</th><th class="p-6">Citas Mes</th><th class="p-6">Facturación</th><th class="p-6">Rating</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-t">
+                                        <td class="p-6 font-bold">Dr. Roberto Vargas</td>
+                                        <td class="p-6">45</td>
+                                        <td class="p-6 text-blue-600 font-bold">₡1.2M</td>
+                                        <td class="p-6 text-amber-500">★★★★★</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                    break;
+                case 'pacientes':
+                case 'intervenciones':
+                    title.innerText = "Historial Clínico";
+                    html = `
+                        <div class="bg-white p-8 rounded-3xl border">
+                            <div class="flex justify-between items-center mb-8">
+                                <h3 class="text-xl font-bold italic">Paciente: MAX (Golden Retriever)</h3>
+                                <button onclick="exportToPDF()" class="bg-red-600 text-white px-6 py-2 rounded-xl font-bold">Exportar PDF</button>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="p-4 bg-slate-50 rounded-xl border">
+                                    <p class="font-black">02/05/2026 - Cirugía Dental</p>
+                                    <p class="text-sm">Observación: Limpieza profunda realizada sin complicaciones. Sedación exitosa.</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'agendar':
+                    title.innerText = "Reservar Cita Médica";
+                    html = `
+                        <div class="bg-white p-12 rounded-[3rem] border shadow-2xl max-w-2xl mx-auto">
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="text-xs font-black uppercase text-slate-400">Seleccionar Médico</label>
+                                    <select class="w-full p-4 mt-2 bg-slate-100 rounded-2xl outline-none font-bold">
+                                        <option>Dr. Roberto Vargas (Cirugía)</option>
+                                        <option>Dra. Maria Elena (Dermatología)</option>
+                                    </select>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <input type="date" class="p-4 bg-slate-100 rounded-2xl font-bold outline-none border-2 focus:border-blue-600">
+                                    <input type="time" class="p-4 bg-slate-100 rounded-2xl font-bold outline-none border-2 focus:border-blue-600">
+                                </div>
+                                <div class="p-6 bg-blue-50 rounded-2xl border border-blue-200">
+                                    <p class="text-sm font-bold text-blue-800 italic">Monto a pagar para agendar: ₡15,000[cite: 1]</p>
+                                    <p class="text-[10px] uppercase font-black text-blue-400 mt-2 italic">Método: SINPE Móvil al 8888-8888</p>
+                                </div>
+                                <button class="w-full bg-blue-600 text-white py-5 rounded-3xl font-black text-xl shadow-xl">RESERVAR MI ESPACIO</button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'perfil':
+                    title.innerText = "Configuración de Mi Perfil";
+                    html = `
+                        <div class="bg-white p-12 rounded-[3rem] border shadow-sm max-w-xl">
+                            <div class="space-y-6">
+                                <div><label class="text-xs font-black text-slate-400 uppercase">Nombre Completo</label>
+                                <input type="text" value="${currentUser.name}" class="w-full p-4 bg-slate-50 rounded-xl mt-2 font-bold outline-none border-2 focus:border-blue-600"></div>
+                                <div><label class="text-xs font-black text-slate-400 uppercase">Cambiar Contraseña</label>
+                                <input type="password" placeholder="Nueva Contraseña" class="w-full p-4 bg-slate-50 rounded-xl mt-2 font-bold outline-none border-2 focus:border-blue-600"></div>
+                                <button class="bg-slate-900 text-white px-10 py-4 rounded-2xl font-black">GUARDAR CAMBIOS</button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+            content.innerHTML = html;
+        }
+
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.setFont("helvetica", "bold");
+            doc.text("HISTORIAL CLÍNICO CANAAN VET", 20, 20);
+            doc.setFontSize(10);
+            doc.text("Paciente: MAX | Médico: Dr. Roberto Vargas", 20, 30);
+            doc.text("--------------------------------------------------", 20, 35);
+            doc.text("Resumen: Cirugía de limpieza dental y extracción.", 20, 45);
+            doc.save("Expediente_MAX.pdf");
+            alert("PDF Generado con éxito");
         }
     </script>
 </body>
