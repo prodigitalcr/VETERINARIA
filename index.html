@@ -3,177 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CANAAN Vet | Hospital Veterinario & App</title>
+    <title>CANAAN Vet | Gestión Clínica Digital</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .hero-mesh { background: radial-gradient(at 0% 0%, rgba(14, 165, 233, 0.15) 0, transparent 50%), radial-gradient(at 100% 0%, rgba(37, 99, 235, 0.1) 0, transparent 50%); }
-        .hidden-app { display: none; }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .hero-bg { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); }
+        .hidden-section { display: none !important; }
     </style>
 </head>
-<body class="bg-slate-50 font-sans leading-relaxed">
+<body class="bg-slate-50 text-slate-900 font-sans">
 
-    <!-- SECCIÓN 1: LANDING PAGE PROFESIONAL -->
-    <div id="landing-view" class="hero-mesh min-h-screen">
-        <nav class="container mx-auto p-6 flex justify-between items-center">
+    <!-- SECCIÓN 1: LANDING PAGE (PÚBLICA) -->
+    <div id="section-landing">
+        <nav class="p-6 flex justify-between items-center glass sticky top-0 z-40 border-b">
             <div class="flex items-center gap-2">
                 <div class="bg-blue-600 p-2 rounded-lg text-white"><i class="fas fa-paw"></i></div>
-                <span class="text-2xl font-bold tracking-tighter text-slate-800 uppercase">Canaan <span class="text-blue-600">Vet</span></span>
+                <span class="text-2xl font-black tracking-tighter italic">CANAAN <span class="text-blue-600 font-normal">VET</span></span>
             </div>
-            <div class="space-x-4">
-                <button onclick="showLogin('client')" class="text-slate-600 font-semibold hover:text-blue-600">Mi Mascota</button>
-                <button onclick="showLogin('admin')" class="bg-slate-800 text-white px-6 py-2 rounded-full font-bold shadow-lg hover:bg-slate-700 transition">Portal Médico</button>
+            <div class="flex gap-4">
+                <button onclick="showAuth('admin')" class="text-slate-600 font-bold hover:text-blue-600 transition">Admin</button>
+                <button onclick="showAuth('client')" class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold shadow-lg hover:bg-blue-700 transition">Mi Portal</button>
             </div>
         </nav>
 
-        <header class="container mx-auto px-6 py-20 flex flex-col md:flex-row items-center">
-            <div class="md:w-1/2 mb-12 md:mb-0">
-                <h1 class="text-6xl font-black text-slate-900 leading-[1.1] mb-6">La salud de tu mejor amigo, <span class="text-blue-600 italic">digitalizada.</span></h1>
-                <p class="text-xl text-slate-600 mb-10 max-w-lg">Gestiona vacunas, historial clínico y citas desde nuestra plataforma. Porque ellos merecen tecnología de punta y amor incondicional.</p>
-                <div class="flex gap-4">
-                    <button onclick="showLogin('client')" class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-xl hover:bg-blue-700 transform hover:-translate-y-1 transition">Registrar mi Mascota</button>
-                    <button class="bg-white border-2 border-slate-200 text-slate-800 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-slate-50 transition">Ver Servicios</button>
+        <header class="hero-bg py-20 px-6 overflow-hidden">
+            <div class="container mx-auto flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10">
+                    <span class="bg-blue-100 text-blue-700 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Veterinaria 2.0 en Costa Rica</span>
+                    <h1 class="text-6xl font-black leading-tight mt-4 mb-6">Salud animal <br><span class="text-blue-600">sin papeles.</span></h1>
+                    <p class="text-xl text-slate-600 mb-8 max-w-lg">Accede al historial de vacunas, tipo de alimento y citas de tu mascota desde cualquier lugar.</p>
+                    <div class="flex gap-4">
+                        <button onclick="showAuth('client')" class="bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-slate-800 transition shadow-xl">Agendar Cita</button>
+                        <button class="bg-white border p-4 rounded-2xl font-bold hover:bg-slate-50 transition">Ver Especialidades</button>
+                    </div>
                 </div>
-            </div>
-            <div class="md:w-1/2 relative">
-                <div class="absolute -top-10 -left-10 w-40 h-40 bg-blue-100 rounded-full blur-3xl opacity-50"></div>
-                <img src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?auto=format&fit=crop&q=80&w=800" class="rounded-[2.5rem] shadow-2xl border-b-8 border-blue-600 relative z-10" alt="Veterinario">
+                <div class="md:w-1/2">
+                    <img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&q=80&w=800" class="rounded-[3rem] shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
+                </div>
             </div>
         </header>
     </div>
 
     <!-- SECCIÓN 2: AUTH MODAL -->
-    <div id="login-modal" class="fixed inset-0 bg-slate-900/90 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white rounded-[2rem] p-10 max-w-md w-full shadow-2xl">
-            <div class="text-center mb-8">
-                <div id="login-icon" class="text-4xl text-blue-600 mb-4"><i class="fas fa-user-circle"></i></div>
-                <h3 id="login-title" class="text-3xl font-bold text-slate-800">Bienvenido</h3>
-                <p id="login-subtitle" class="text-slate-500">Ingresa tus credenciales para continuar</p>
-            </div>
+    <div id="modal-auth" class="fixed inset-0 bg-slate-900/80 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl">
+            <h3 id="auth-title" class="text-2xl font-bold mb-2 text-center text-slate-800">Iniciar Sesión</h3>
+            <p class="text-center text-slate-500 mb-6 text-sm">Prueba con los usuarios de muestra</p>
             <div class="space-y-4">
-                <input type="email" id="email" placeholder="correo@ejemplo.com" class="w-full bg-slate-100 border-none p-4 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
-                <input type="password" id="pass" placeholder="Contraseña" class="w-full bg-slate-100 border-none p-4 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
-                <button onclick="handleLogin()" class="w-full bg-blue-600 text-white font-black py-4 rounded-xl shadow-lg hover:bg-blue-700 transition">ENTRAR AL SISTEMA</button>
-                <button onclick="closeModal()" class="w-full text-slate-400 font-bold text-sm">CERRAR</button>
+                <input type="email" id="login-email" placeholder="Email (admin@canaan.com)" class="w-full border p-4 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="password" id="login-pass" placeholder="Contraseña (admin123)" class="w-full border p-4 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                <button onclick="processLogin()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-blue-700 transition uppercase tracking-widest">Entrar</button>
+                <button onclick="hideAuth()" class="w-full text-slate-400 font-bold py-2">Cancelar</button>
             </div>
         </div>
     </div>
 
-    <!-- SECCIÓN 3: DASHBOARD ADMINISTRATIVO (Para el equipo de 6) -->
-    <div id="admin-dashboard" class="hidden-app min-h-screen flex">
-        <!-- Sidebar -->
-        <aside class="w-72 bg-slate-900 text-white p-8 flex flex-col">
-            <h2 class="text-2xl font-black mb-12 italic">CANAAN <span class="text-blue-500">ADMIN</span></h2>
+    <!-- SECCIÓN 3: DASHBOARD ADMINISTRADOR -->
+    <div id="section-admin" class="hidden-section flex min-h-screen">
+        <aside class="w-64 bg-slate-900 text-white p-6 flex flex-col">
+            <h2 class="text-xl font-bold mb-10 italic">ADMIN <span class="text-blue-500">PRO</span></h2>
             <nav class="flex-1 space-y-4">
-                <button class="w-full text-left p-4 bg-blue-600 rounded-xl font-bold"><i class="fas fa-columns mr-3"></i> Resumen</button>
-                <button class="w-full text-left p-4 text-slate-400 hover:text-white transition"><i class="fas fa-dog mr-3"></i> Pacientes</button>
-                <button class="w-full text-left p-4 text-slate-400 hover:text-white transition"><i class="fas fa-calendar-check mr-3"></i> Citas</button>
+                <div class="p-3 bg-blue-600 rounded-lg cursor-pointer"><i class="fas fa-dog mr-2"></i> Pacientes</div>
+                <div class="p-3 text-slate-400 hover:text-white cursor-pointer"><i class="fas fa-calendar mr-2"></i> Citas</div>
             </nav>
-            <button onclick="logout()" class="text-slate-500 hover:text-red-400 font-bold mt-auto"><i class="fas fa-power-off mr-2"></i> Salir</button>
+            <button onclick="logout()" class="text-red-400 font-bold p-3 border border-red-900 rounded-lg hover:bg-red-900/20"><i class="fas fa-sign-out-alt"></i> Salir</button>
         </aside>
-
-        <!-- Main Content -->
-        <main class="flex-1 p-12 overflow-y-auto">
-            <header class="flex justify-between items-center mb-12">
-                <div>
-                    <h1 class="text-4xl font-bold text-slate-800">Panel de Control</h1>
-                    <p class="text-slate-500">Gestión de pacientes y citas veterinarias</p>
-                </div>
-                <button class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:bg-blue-700">+ Nueva Mascota</button>
-            </header>
-
-            <!-- Lista de Clientes y Mascotas (Editables) -->
-            <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-                <table class="w-full">
-                    <thead class="bg-slate-50 text-slate-500 text-xs font-bold uppercase">
+        <main class="flex-1 p-10 overflow-y-auto">
+            <div class="flex justify-between items-center mb-10">
+                <h2 class="text-3xl font-black">Panel de Administración</h2>
+                <button class="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold">+ Nuevo Registro</button>
+            </div>
+            <div class="bg-white rounded-3xl border shadow-sm overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 border-b text-slate-400 text-xs uppercase font-black">
                         <tr>
-                            <th class="px-8 py-4 text-left">Mascota & Dueño</th>
-                            <th class="px-8 py-4 text-left">Raza & Alimento</th>
-                            <th class="px-8 py-4 text-left">Estado Vacunas</th>
-                            <th class="px-8 py-4 text-center">Acciones</th>
+                            <th class="p-6">Mascota / Dueño</th>
+                            <th class="p-6">Raza & Alimento</th>
+                            <th class="p-6">Estado Vacunas</th>
+                            <th class="p-6">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="admin-pet-list">
-                        <!-- Generado dinámicamente -->
+                    <tbody id="admin-table-body">
+                        <!-- Se llena con JS -->
                     </tbody>
                 </table>
             </div>
         </main>
     </div>
 
+    <!-- SECCIÓN 4: DASHBOARD CLIENTE -->
+    <div id="section-client" class="hidden-section bg-slate-100 min-h-screen p-6">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-bold">¡Hola, Dueño de Max!</h2>
+                <button onclick="logout()" class="text-slate-500 font-bold">Cerrar Sesión</button>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-8 rounded-3xl shadow-sm border-b-4 border-blue-600">
+                    <h3 class="font-black text-blue-600 mb-4 uppercase text-xs">Ficha de la Mascota</h3>
+                    <p class="text-3xl font-bold mb-2">Max <span class="text-slate-400 font-light text-lg">(Golden Retriever)</span></p>
+                    <p class="text-slate-500 mb-4 italic">Alimento: Pro Plan Puppy - 500g/día</p>
+                    <div class="bg-green-100 text-green-700 p-4 rounded-2xl flex items-center gap-3">
+                        <i class="fas fa-shield-virus"></i>
+                        <span class="font-bold">Vacunas al día (Próxima: 20/05/2026)</span>
+                    </div>
+                </div>
+                <div class="bg-red-600 p-8 rounded-3xl shadow-xl text-white flex flex-col justify-center">
+                    <h3 class="font-bold mb-2">¿Es una emergencia?</h3>
+                    <p class="text-white/80 mb-6">Atención prioritaria 24/7 para tu mascota.</p>
+                    <button class="bg-white text-red-600 py-3 rounded-xl font-black text-lg">SOLICITAR MÉDICO</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // CONFIGURACIÓN FIREBASE (Reemplazar con tus credenciales)
-        const firebaseConfig = {
-            apiKey: "TU_API_KEY",
-            authDomain: "TU_PROYECTO.firebaseapp.com",
-            projectId: "TU_PROYECTO",
-            storageBucket: "TU_PROYECTO.appspot.com",
-            messagingSenderId: "TU_SENDER_ID",
-            appId: "TU_APP_ID"
+        // DATOS DE MUESTRA (Sustituyen temporalmente a Firebase)
+        const MOCK_DATA = {
+            pets: [
+                { id: 1, nombre: "Max", dueno: "Juan Perez", raza: "Golden", alimento: "Pro Plan", vacunas: "Al día" },
+                { id: 2, nombre: "Luna", dueno: "Maria S.", raza: "Gato Persa", alimento: "Royal Canin", vacunas: "Pendiente Rabia" }
+            ]
         };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
 
-        let currentRole = '';
-
-        function showLogin(role) {
-            currentRole = role;
-            document.getElementById('login-modal').classList.remove('hidden');
-            document.getElementById('login-title').innerText = role === 'admin' ? 'Acceso Administrador' : 'Acceso Propietario';
-            document.getElementById('login-icon').innerHTML = role === 'admin' ? '<i class="fas fa-user-shield"></i>' : '<i class="fas fa-paw"></i>';
+        // LÓGICA DE NAVEGACIÓN
+        function showAuth(role) {
+            document.getElementById('modal-auth').classList.remove('hidden');
+            document.getElementById('auth-title').innerText = role === 'admin' ? 'Portal de Administrador' : 'Portal de Cliente';
         }
 
-        function closeModal() { document.getElementById('login-modal').classList.add('hidden'); }
+        function hideAuth() { document.getElementById('modal-auth').classList.add('hidden'); }
 
-        async function handleLogin() {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('pass').value;
-            try {
-                await auth.signInWithEmailAndPassword(email, pass);
-                document.getElementById('landing-view').style.display = 'none';
-                closeModal();
-                if(currentRole === 'admin') {
-                    document.getElementById('admin-dashboard').classList.remove('hidden-app');
-                    loadAdminData();
-                } else {
-                    alert("Dashboard de cliente en desarrollo...");
-                }
-            } catch (e) { alert("Acceso denegado: " + e.message); }
+        function processLogin() {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+
+            // Simulación de Login
+            if (email === 'admin@canaan.com' && pass === 'admin123') {
+                hideAuth();
+                document.getElementById('section-landing').classList.add('hidden-section');
+                document.getElementById('section-admin').classList.remove('hidden-section');
+                renderAdminTable();
+            } else if (email === 'cliente@mascota.com' && pass === 'user123') {
+                hideAuth();
+                document.getElementById('section-landing').classList.add('hidden-section');
+                document.getElementById('section-client').classList.remove('hidden-section');
+            } else {
+                alert("Credenciales incorrectas. Usa las de muestra indicadas en la tabla.");
+            }
         }
 
-        function loadAdminData() {
-            db.collection("mascotas").onSnapshot(snapshot => {
-                const list = document.getElementById('admin-pet-list');
-                list.innerHTML = '';
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    list.innerHTML += `
-                        <tr class="border-b border-slate-50 hover:bg-slate-50 transition">
-                            <td class="px-8 py-6">
-                                <div class="font-bold text-slate-800 text-lg">${data.nombre}</div>
-                                <div class="text-blue-600 text-sm font-medium">Dueño: ${data.dueno}</div>
-                            </td>
-                            <td class="px-8 py-6 text-slate-600">
-                                <div class="font-medium">${data.raza}</div>
-                                <div class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded inline-block mt-1">${data.alimento}</div>
-                            </td>
-                            <td class="px-8 py-6">
-                                <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700">Pendiente: Rabia</span>
-                            </td>
-                            <td class="px-8 py-6 text-center">
-                                <button onclick="editPet('${doc.id}')" class="text-blue-600 hover:bg-blue-50 p-2 rounded-lg transition"><i class="fas fa-edit"></i></button>
-                            </td>
-                        </tr>
-                    `;
-                });
-            });
+        function renderAdminTable() {
+            const tbody = document.getElementById('admin-table-body');
+            tbody.innerHTML = MOCK_DATA.pets.map(pet => `
+                <tr class="hover:bg-slate-50 border-b last:border-0 transition">
+                    <td class="p-6">
+                        <div class="font-bold text-lg">${pet.nombre}</div>
+                        <div class="text-sm text-slate-400 font-medium italic">${pet.dueno}</div>
+                    </td>
+                    <td class="p-6">
+                        <div class="text-slate-700">${pet.raza}</div>
+                        <div class="text-xs font-bold text-blue-500 uppercase mt-1 italic">${pet.alimento}</div>
+                    </td>
+                    <td class="p-6">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold ${pet.vacunas === 'Al día' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}">${pet.vacunas}</span>
+                    </td>
+                    <td class="p-6">
+                        <button onclick="alert('Abriendo editor para ${pet.nombre}')" class="text-blue-600 hover:underline font-bold text-sm">Editar Ficha</button>
+                    </td>
+                </tr>
+            `).join('');
         }
 
-        function logout() { auth.signOut(); location.reload(); }
+        function logout() { location.reload(); }
     </script>
 </body>
 </html>
