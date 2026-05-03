@@ -3,180 +3,399 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CANAAN Vet | Gestión Clínica Digital</title>
+    <title>CANAAN Vet | Business Architecture & Medical OS</title>
+    
+    <!-- Frameworks & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+
     <style>
-        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
-        .hero-bg { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .hero-gradient { background: radial-gradient(circle at 0% 0%, #eff6ff 0%, #ffffff 100%); }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-20px); } 100% { transform: translateY(0px); } }
+        .sidebar-item:hover { background: rgba(59, 130, 246, 0.1); color: #2563eb; }
         .hidden-section { display: none !important; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans">
+<body class="bg-slate-50 text-slate-900">
 
-    <!-- SECCIÓN 1: LANDING PAGE (PÚBLICA) -->
-    <div id="section-landing">
-        <nav class="p-6 flex justify-between items-center glass sticky top-0 z-40 border-b">
-            <div class="flex items-center gap-2">
-                <div class="bg-blue-600 p-2 rounded-lg text-white"><i class="fas fa-paw"></i></div>
-                <span class="text-2xl font-black tracking-tighter italic">CANAAN <span class="text-blue-600 font-normal">VET</span></span>
+    <!-- ==========================================
+         NAVEGACIÓN GLOBAL
+         ========================================== -->
+    <nav id="main-nav" class="fixed w-full z-50 glass-card px-8 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="bg-blue-600 text-white p-2 rounded-xl shadow-lg shadow-blue-200">
+                <i class="fas fa-paw fa-lg"></i>
             </div>
-            <div class="flex gap-4">
-                <button onclick="showAuth('admin')" class="text-slate-600 font-bold hover:text-blue-600 transition">Admin</button>
-                <button onclick="showAuth('client')" class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold shadow-lg hover:bg-blue-700 transition">Mi Portal</button>
-            </div>
-        </nav>
+            <span class="text-2xl font-extrabold tracking-tighter italic">CANAAN <span class="text-blue-600 font-normal">VET</span></span>
+        </div>
+        <div class="hidden md:flex gap-8 font-semibold text-slate-600">
+            <a href="#servicios" class="hover:text-blue-600 transition">Servicios</a>
+            <a href="#proceso" class="hover:text-blue-600 transition">Proceso</a>
+            <a href="#emergencias" class="hover:text-red-500 transition font-bold text-red-600">Urgencias</a>
+        </div>
+        <div class="flex gap-4">
+            <button onclick="openModal('admin')" class="px-5 py-2 rounded-xl font-bold text-slate-500 hover:bg-slate-100 transition">Portal Médico</button>
+            <button onclick="openModal('client')" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold shadow-xl hover:bg-blue-700 transition transform hover:scale-105">Mi Mascota</button>
+        </div>
+    </nav>
 
-        <header class="hero-bg py-20 px-6 overflow-hidden">
-            <div class="container mx-auto flex flex-col md:flex-row items-center">
-                <div class="md:w-1/2 mb-10">
-                    <span class="bg-blue-100 text-blue-700 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Veterinaria 2.0 en Costa Rica</span>
-                    <h1 class="text-6xl font-black leading-tight mt-4 mb-6">Salud animal <br><span class="text-blue-600">sin papeles.</span></h1>
-                    <p class="text-xl text-slate-600 mb-8 max-w-lg">Accede al historial de vacunas, tipo de alimento y citas de tu mascota desde cualquier lugar.</p>
-                    <div class="flex gap-4">
-                        <button onclick="showAuth('client')" class="bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-slate-800 transition shadow-xl">Agendar Cita</button>
-                        <button class="bg-white border p-4 rounded-2xl font-bold hover:bg-slate-50 transition">Ver Especialidades</button>
+    <!-- ==========================================
+         LANDING PAGE (ESTRUCTURA DE CONVERSIÓN)
+         ========================================== -->
+    <main id="view-landing" class="pt-24">
+        <!-- Hero Section -->
+        <section class="hero-gradient min-h-screen flex items-center px-8">
+            <div class="container mx-auto grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8">
+                    <div class="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest">
+                        <span class="relative flex h-2 w-2">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                        </span>
+                        Innovación Veterinaria en Costa Rica
+                    </div>
+                    <h1 class="text-7xl font-extrabold leading-tight text-slate-900">
+                        La salud de tu mascota, <span class="text-blue-600">digitalizada.</span>
+                    </h1>
+                    <p class="text-xl text-slate-500 leading-relaxed max-w-lg">
+                        Gestionamos el historial clínico, vacunas y alimentación de tu mascota en una plataforma inteligente. Transparencia médica total para tu mejor amigo.
+                    </p>
+                    <div class="flex flex-wrap gap-5">
+                        <button onclick="openModal('client')" class="bg-slate-900 text-white px-10 py-5 rounded-2xl font-black text-lg shadow-2xl hover:bg-slate-800 transition transform hover:-translate-y-1">
+                            AGENDAR EVALUACIÓN
+                        </button>
+                        <div class="flex items-center gap-4 px-6">
+                            <div class="flex -space-x-3">
+                                <img src="https://i.pravatar.cc/100?u=1" class="w-12 h-12 rounded-full border-4 border-white">
+                                <img src="https://i.pravatar.cc/100?u=2" class="w-12 h-12 rounded-full border-4 border-white">
+                                <img src="https://i.pravatar.cc/100?u=3" class="w-12 h-12 rounded-full border-4 border-white">
+                            </div>
+                            <div class="text-sm">
+                                <p class="font-bold">+500 Dueños felices</p>
+                                <div class="text-yellow-400 text-xs">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="md:w-1/2">
-                    <img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&q=80&w=800" class="rounded-[3rem] shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&q=80&w=1000" class="rounded-[4rem] shadow-2xl animate-float relative z-10 border-[16px] border-white" alt="Vet Care">
+                    <div class="absolute -bottom-10 -left-10 bg-white p-6 rounded-3xl shadow-xl z-20 flex items-center gap-4 border">
+                        <div class="bg-green-100 text-green-600 p-3 rounded-2xl"><i class="fas fa-check-circle fa-2x"></i></div>
+                        <div>
+                            <p class="text-xs text-slate-400 font-bold uppercase">Citas Hoy</p>
+                            <p class="text-xl font-black">Disponibles</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </header>
-    </div>
+        </section>
 
-    <!-- SECCIÓN 2: AUTH MODAL -->
-    <div id="modal-auth" class="fixed inset-0 bg-slate-900/80 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl">
-            <h3 id="auth-title" class="text-2xl font-bold mb-2 text-center text-slate-800">Iniciar Sesión</h3>
-            <p class="text-center text-slate-500 mb-6 text-sm">Prueba con los usuarios de muestra</p>
-            <div class="space-y-4">
-                <input type="email" id="login-email" placeholder="Email (admin@canaan.com)" class="w-full border p-4 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-                <input type="password" id="login-pass" placeholder="Contraseña (admin123)" class="w-full border p-4 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-                <button onclick="processLogin()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-blue-700 transition uppercase tracking-widest">Entrar</button>
-                <button onclick="hideAuth()" class="w-full text-slate-400 font-bold py-2">Cancelar</button>
+        <!-- Sección Servicios (PAS) -->
+        <section id="servicios" class="py-24 bg-white px-8">
+            <div class="container mx-auto text-center mb-20">
+                <h2 class="text-4xl font-black mb-4">¿Por qué CANAAN Vet?</h2>
+                <p class="text-slate-500 max-w-2xl mx-auto italic">"No listamos servicios, resolvemos el bienestar de quien no tiene voz."</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8 container mx-auto">
+                <div class="p-10 rounded-[3rem] bg-slate-50 border hover:border-blue-500 transition-all group">
+                    <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:text-white transition">
+                        <i class="fas fa-file-medical fa-2x"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Expediente Digital</h3>
+                    <p class="text-slate-500">Olvida los papeles. Accede a rayos X, exámenes de sangre y diagnósticos desde tu teléfono 24/7.</p>
+                </div>
+                <div class="p-10 rounded-[3rem] bg-slate-50 border hover:border-blue-500 transition-all group">
+                    <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:text-white transition">
+                        <i class="fas fa-utensils fa-2x"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Nutrición de Precisión</h3>
+                    <p class="text-slate-500">Algoritmos que sugieren el alimento ideal basado en la raza, peso y edad de tu mascota.</p>
+                </div>
+                <div class="p-10 rounded-[3rem] bg-slate-50 border hover:border-blue-500 transition-all group">
+                    <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:text-white transition">
+                        <i class="fas fa-shield-cat fa-2x"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Escudo Preventivo</h3>
+                    <p class="text-slate-500 text-sm">Notificaciones automáticas para vacunas y desparasitaciones. Nunca más un olvido fatal.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==========================================
+         MODAL DE AUTENTICACIÓN (LÓGICA DINÁMICA)
+         ========================================== -->
+    <div id="auth-modal" class="fixed inset-0 z-[100] hidden bg-slate-900/90 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-white rounded-[3rem] p-10 max-w-lg w-full shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-8">
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-900"><i class="fas fa-times fa-xl"></i></button>
+            </div>
+            <div class="text-center mb-10">
+                <h3 id="modal-title" class="text-4xl font-black mb-2">Bienvenido</h3>
+                <p id="modal-desc" class="text-slate-500">Ingresa tus credenciales de muestra</p>
+            </div>
+            <div class="space-y-5">
+                <div class="relative">
+                    <i class="fas fa-envelope absolute left-5 top-5 text-slate-400"></i>
+                    <input type="email" id="auth-email" placeholder="Email (admin@canaan.com)" class="w-full bg-slate-50 border-2 border-slate-100 p-5 pl-14 rounded-2xl focus:border-blue-600 outline-none transition font-semibold">
+                </div>
+                <div class="relative">
+                    <i class="fas fa-lock absolute left-5 top-5 text-slate-400"></i>
+                    <input type="password" id="auth-pass" placeholder="Contraseña (admin123)" class="w-full bg-slate-50 border-2 border-slate-100 p-5 pl-14 rounded-2xl focus:border-blue-600 outline-none transition font-semibold">
+                </div>
+                <button onclick="handleAuth()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-xl shadow-xl hover:bg-blue-700 transition uppercase tracking-tighter">
+                    Entrar al Sistema
+                </button>
+                <div class="bg-amber-50 p-4 rounded-2xl text-amber-700 text-xs border border-amber-100">
+                    <i class="fas fa-info-circle mr-2"></i> Para pruebas rápidas use: <b>admin123</b> o <b>user123</b>.
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- SECCIÓN 3: DASHBOARD ADMINISTRADOR -->
-    <div id="section-admin" class="hidden-section flex min-h-screen">
-        <aside class="w-64 bg-slate-900 text-white p-6 flex flex-col">
-            <h2 class="text-xl font-bold mb-10 italic">ADMIN <span class="text-blue-500">PRO</span></h2>
-            <nav class="flex-1 space-y-4">
-                <div class="p-3 bg-blue-600 rounded-lg cursor-pointer"><i class="fas fa-dog mr-2"></i> Pacientes</div>
-                <div class="p-3 text-slate-400 hover:text-white cursor-pointer"><i class="fas fa-calendar mr-2"></i> Citas</div>
-            </nav>
-            <button onclick="logout()" class="text-red-400 font-bold p-3 border border-red-900 rounded-lg hover:bg-red-900/20"><i class="fas fa-sign-out-alt"></i> Salir</button>
-        </aside>
-        <main class="flex-1 p-10 overflow-y-auto">
-            <div class="flex justify-between items-center mb-10">
-                <h2 class="text-3xl font-black">Panel de Administración</h2>
-                <button class="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold">+ Nuevo Registro</button>
+    <!-- ==========================================
+         DASHBOARD ADMINISTRATIVO (SISTEMA OPERATIVO)
+         ========================================== -->
+    <div id="view-admin" class="hidden-section flex min-h-screen bg-slate-50">
+        <!-- Sidebar -->
+        <aside class="w-80 bg-white border-r p-8 flex flex-col fixed h-full">
+            <div class="flex items-center gap-3 mb-16">
+                <div class="bg-blue-600 text-white p-2 rounded-xl"><i class="fas fa-paw"></i></div>
+                <span class="text-xl font-black italic uppercase">Canaan <span class="text-blue-600">Admin</span></span>
             </div>
-            <div class="bg-white rounded-3xl border shadow-sm overflow-hidden">
+            <nav class="flex-1 space-y-2">
+                <div class="sidebar-item p-4 rounded-2xl flex items-center gap-4 font-bold cursor-pointer transition text-blue-600 bg-blue-50">
+                    <i class="fas fa-th-large"></i> Dashboard
+                </div>
+                <div class="sidebar-item p-4 rounded-2xl flex items-center gap-4 font-bold cursor-pointer transition text-slate-400">
+                    <i class="fas fa-dog"></i> Pacientes
+                </div>
+                <div class="sidebar-item p-4 rounded-2xl flex items-center gap-4 font-bold cursor-pointer transition text-slate-400">
+                    <i class="fas fa-calendar-alt"></i> Citas del Día
+                </div>
+                <div class="sidebar-item p-4 rounded-2xl flex items-center gap-4 font-bold cursor-pointer transition text-slate-400">
+                    <i class="fas fa-wallet"></i> Pagos SINPE
+                </div>
+            </nav>
+            <button onclick="logout()" class="p-4 rounded-2xl font-black text-red-500 hover:bg-red-50 transition text-left mt-auto">
+                <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
+            </button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 ml-80 p-12">
+            <header class="flex justify-between items-center mb-12">
+                <div>
+                    <h2 class="text-4xl font-black">Gestión Clínica</h2>
+                    <p class="text-slate-400 font-semibold italic">Bienvenido, Dr. Canaan</p>
+                </div>
+                <div class="flex gap-4">
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4 px-8">
+                        <div class="text-right">
+                            <p class="text-xs font-bold text-slate-400 uppercase">Caja Hoy</p>
+                            <p class="text-xl font-black text-blue-600">₡450,000</p>
+                        </div>
+                        <i class="fas fa-chart-line text-blue-600 fa-lg"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Pacientes Table -->
+            <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+                <div class="p-8 border-b flex justify-between items-center">
+                    <h3 class="font-black text-xl">Expedientes Activos</h3>
+                    <div class="bg-slate-50 px-6 py-3 rounded-xl border border-slate-200 text-sm font-semibold flex items-center gap-3">
+                        <i class="fas fa-search text-slate-400"></i>
+                        <input type="text" placeholder="Buscar mascota o dueño..." class="bg-transparent outline-none w-64">
+                    </div>
+                </div>
                 <table class="w-full text-left">
-                    <thead class="bg-slate-50 border-b text-slate-400 text-xs uppercase font-black">
+                    <thead class="bg-slate-50/50 text-slate-400 text-xs font-black uppercase tracking-widest border-b">
                         <tr>
-                            <th class="p-6">Mascota / Dueño</th>
-                            <th class="p-6">Raza & Alimento</th>
-                            <th class="p-6">Estado Vacunas</th>
-                            <th class="p-6">Acciones</th>
+                            <th class="p-8">Mascota / Dueño</th>
+                            <th class="p-8">Raza / Alimento</th>
+                            <th class="p-8">Estado Vacunación</th>
+                            <th class="p-8 text-center">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="admin-table-body">
-                        <!-- Se llena con JS -->
+                    <tbody id="admin-table">
+                        <!-- Renderizado por JS -->
                     </tbody>
                 </table>
             </div>
         </main>
     </div>
 
-    <!-- SECCIÓN 4: DASHBOARD CLIENTE -->
-    <div id="section-client" class="hidden-section bg-slate-100 min-h-screen p-6">
-        <div class="max-w-4xl mx-auto">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-2xl font-bold">¡Hola, Dueño de Max!</h2>
-                <button onclick="logout()" class="text-slate-500 font-bold">Cerrar Sesión</button>
-            </div>
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-white p-8 rounded-3xl shadow-sm border-b-4 border-blue-600">
-                    <h3 class="font-black text-blue-600 mb-4 uppercase text-xs">Ficha de la Mascota</h3>
-                    <p class="text-3xl font-bold mb-2">Max <span class="text-slate-400 font-light text-lg">(Golden Retriever)</span></p>
-                    <p class="text-slate-500 mb-4 italic">Alimento: Pro Plan Puppy - 500g/día</p>
-                    <div class="bg-green-100 text-green-700 p-4 rounded-2xl flex items-center gap-3">
-                        <i class="fas fa-shield-virus"></i>
-                        <span class="font-bold">Vacunas al día (Próxima: 20/05/2026)</span>
+    <!-- ==========================================
+         PORTAL DE CLIENTE (EXPERIENCIA PREMIUM)
+         ========================================== -->
+    <div id="view-client" class="hidden-section min-h-screen bg-slate-50 p-12">
+        <div class="max-w-6xl mx-auto">
+            <header class="flex justify-between items-center mb-16">
+                <div class="flex items-center gap-4">
+                    <img src="https://i.pravatar.cc/150?u=user123" class="w-16 h-16 rounded-3xl border-4 border-white shadow-xl">
+                    <div>
+                        <h2 class="text-3xl font-black italic">Mi Portal Canaan</h2>
+                        <p class="text-slate-400 font-bold">Bienvenido, Juan Perez</p>
                     </div>
                 </div>
-                <div class="bg-red-600 p-8 rounded-3xl shadow-xl text-white flex flex-col justify-center">
-                    <h3 class="font-bold mb-2">¿Es una emergencia?</h3>
-                    <p class="text-white/80 mb-6">Atención prioritaria 24/7 para tu mascota.</p>
-                    <button class="bg-white text-red-600 py-3 rounded-xl font-black text-lg">SOLICITAR MÉDICO</button>
+                <button onclick="logout()" class="bg-white p-4 rounded-2xl shadow-sm font-bold text-slate-400 hover:text-red-500 transition border">Salir</button>
+            </header>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Tarjeta Mascota -->
+                <div class="md:col-span-2 bg-white rounded-[3rem] p-12 shadow-sm border relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-blue-600 text-white px-8 py-4 rounded-bl-[3rem] font-black">
+                        PACIENTE #00234
+                    </div>
+                    <div class="flex items-center gap-8 mb-12">
+                        <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=200" class="w-32 h-32 rounded-[2.5rem] object-cover shadow-2xl">
+                        <div>
+                            <h3 class="text-5xl font-black mb-2 italic">MAX</h3>
+                            <p class="text-blue-600 font-bold text-xl uppercase tracking-tighter">Golden Retriever • 3 Años</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-8">
+                        <div class="bg-slate-50 p-6 rounded-3xl border">
+                            <p class="text-xs font-black text-slate-400 uppercase mb-2">Nutrición Activa</p>
+                            <p class="font-bold text-slate-800">Pro Plan Puppy (500g / día)</p>
+                            <p class="text-blue-600 text-xs font-bold mt-2">Siguiente compra: 15 Mayo</p>
+                        </div>
+                        <div class="bg-slate-50 p-6 rounded-3xl border">
+                            <p class="text-xs font-black text-slate-400 uppercase mb-2">Último Peso</p>
+                            <p class="font-bold text-slate-800">32.5 Kilogramos</p>
+                            <p class="text-green-600 text-xs font-bold mt-2">Peso saludable</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta Urgencias -->
+                <div class="bg-red-600 text-white rounded-[3rem] p-10 shadow-2xl shadow-red-200 flex flex-col items-center text-center justify-center space-y-6">
+                    <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center animate-pulse">
+                        <i class="fas fa-ambulance fa-2x"></i>
+                    </div>
+                    <h3 class="text-3xl font-black tracking-tighter italic uppercase">Botón de Pánico</h3>
+                    <p class="font-semibold text-red-100">Si tu mascota necesita ayuda inmediata, presiona este botón.</p>
+                    <button onclick="alert('Llamando a Emergencias CANAAN...')" class="w-full bg-white text-red-600 py-5 rounded-2xl font-black text-xl uppercase shadow-lg transform hover:scale-105 transition">Solicitar Médico</button>
+                </div>
+            </div>
+
+            <!-- Tabla de Vacunas -->
+            <div class="mt-12 bg-white rounded-[3rem] p-12 border shadow-sm">
+                <h4 class="text-2xl font-black mb-8 italic"><i class="fas fa-syringe mr-3 text-blue-600"></i> Cronograma de Vacunas</h4>
+                <div class="grid md:grid-cols-4 gap-4">
+                    <div class="p-6 bg-green-50 border-2 border-green-200 rounded-3xl text-center">
+                        <p class="text-xs font-black text-green-700 uppercase mb-1">Rabia</p>
+                        <p class="font-bold">Aplicada</p>
+                        <p class="text-[10px] text-green-600 mt-2 font-bold">Vence: 2027</p>
+                    </div>
+                    <div class="p-6 bg-amber-50 border-2 border-amber-200 rounded-3xl text-center">
+                        <p class="text-xs font-black text-amber-700 uppercase mb-1">Múltiple</p>
+                        <p class="font-bold">Pendiente</p>
+                        <p class="text-[10px] text-amber-600 mt-2 font-bold">Junio 2026</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- ==========================================
+         LÓGICA DE NEGOCIO (JAVASCRIPT ESTRATÉGICO)
+         ========================================== -->
     <script>
-        // DATOS DE MUESTRA (Sustituyen temporalmente a Firebase)
-        const MOCK_DATA = {
-            pets: [
-                { id: 1, nombre: "Max", dueno: "Juan Perez", raza: "Golden", alimento: "Pro Plan", vacunas: "Al día" },
-                { id: 2, nombre: "Luna", dueno: "Maria S.", raza: "Gato Persa", alimento: "Royal Canin", vacunas: "Pendiente Rabia" }
-            ]
-        };
+        // DATA MODEL (Simulación de DB)
+        const CLINIC_DATA = [
+            { id: "P001", nombre: "Max", dueno: "Juan Perez", raza: "Golden Retriever", alimento: "Pro Plan Puppy", vacunas: "Al Día", estado: "bg-green-100 text-green-700" },
+            { id: "P002", nombre: "Luna", dueno: "Marta Gomez", raza: "Gato Persa", alimento: "Royal Canin", vacunas: "Pendiente Rabia", estado: "bg-amber-100 text-amber-700" },
+            { id: "P003", nombre: "Roco", dueno: "Luis Castro", raza: "Pitbull", alimento: "Barf Diet", vacunas: "Urgente", estado: "bg-red-100 text-red-700" }
+        ];
 
-        // LÓGICA DE NAVEGACIÓN
-        function showAuth(role) {
-            document.getElementById('modal-auth').classList.remove('hidden');
-            document.getElementById('auth-title').innerText = role === 'admin' ? 'Portal de Administrador' : 'Portal de Cliente';
+        let currentRole = '';
+
+        // CONTROL DE MODALES
+        function openModal(role) {
+            currentRole = role;
+            document.getElementById('auth-modal').classList.remove('hidden');
+            document.getElementById('modal-title').innerText = role === 'admin' ? 'Acceso Médico' : 'Acceso Propietario';
+            document.getElementById('modal-desc').innerText = `Gestión Profesional de CANAAN VET`;
         }
 
-        function hideAuth() { document.getElementById('modal-auth').classList.add('hidden'); }
+        function closeModal() {
+            document.getElementById('auth-modal').classList.add('hidden');
+        }
 
-        function processLogin() {
-            const email = document.getElementById('login-email').value;
-            const pass = document.getElementById('login-pass').value;
+        // SISTEMA DE AUTENTICACIÓN
+        function handleAuth() {
+            const email = document.getElementById('auth-email').value;
+            const pass = document.getElementById('auth-pass').value;
 
-            // Simulación de Login
+            // Validación de simulación
             if (email === 'admin@canaan.com' && pass === 'admin123') {
-                hideAuth();
-                document.getElementById('section-landing').classList.add('hidden-section');
-                document.getElementById('section-admin').classList.remove('hidden-section');
-                renderAdminTable();
+                showView('admin');
             } else if (email === 'cliente@mascota.com' && pass === 'user123') {
-                hideAuth();
-                document.getElementById('section-landing').classList.add('hidden-section');
-                document.getElementById('section-client').classList.remove('hidden-section');
+                showView('client');
             } else {
-                alert("Credenciales incorrectas. Usa las de muestra indicadas en la tabla.");
+                alert("❌ Credenciales incorrectas. Pruebe con los usuarios indicados en el formulario.");
             }
         }
 
+        // ENRUTADOR DE VISTAS (SPA Logic)
+        function showView(view) {
+            document.getElementById('view-landing').classList.add('hidden-section');
+            document.getElementById('view-admin').classList.add('hidden-section');
+            document.getElementById('view-client').classList.add('hidden-section');
+            document.getElementById('main-nav').classList.add('hidden-section');
+            closeModal();
+
+            if (view === 'admin') {
+                document.getElementById('view-admin').classList.remove('hidden-section');
+                renderAdminTable();
+            } else if (view === 'client') {
+                document.getElementById('view-client').classList.remove('hidden-section');
+            }
+        }
+
+        // RENDERIZADO DE TABLA ADMINISTRATIVA
         function renderAdminTable() {
-            const tbody = document.getElementById('admin-table-body');
-            tbody.innerHTML = MOCK_DATA.pets.map(pet => `
-                <tr class="hover:bg-slate-50 border-b last:border-0 transition">
-                    <td class="p-6">
-                        <div class="font-bold text-lg">${pet.nombre}</div>
-                        <div class="text-sm text-slate-400 font-medium italic">${pet.dueno}</div>
+            const container = document.getElementById('admin-table');
+            container.innerHTML = CLINIC_DATA.map(item => `
+                <tr class="hover:bg-slate-50 transition border-b last:border-0 group">
+                    <td class="p-8">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center font-black text-blue-600">
+                                ${item.nombre[0]}
+                            </div>
+                            <div>
+                                <p class="text-xl font-black italic">${item.nombre}</p>
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-tighter">${item.dueno}</p>
+                            </div>
+                        </div>
                     </td>
-                    <td class="p-6">
-                        <div class="text-slate-700">${pet.raza}</div>
-                        <div class="text-xs font-bold text-blue-500 uppercase mt-1 italic">${pet.alimento}</div>
+                    <td class="p-8">
+                        <p class="font-bold text-slate-700">${item.raza}</p>
+                        <p class="text-[10px] bg-slate-100 text-slate-500 px-2 py-1 rounded inline-block font-black mt-1">${item.alimento}</p>
                     </td>
-                    <td class="p-6">
-                        <span class="px-3 py-1 rounded-full text-xs font-bold ${pet.vacunas === 'Al día' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}">${pet.vacunas}</span>
+                    <td class="p-8">
+                        <span class="px-4 py-2 rounded-xl text-xs font-black uppercase ${item.estado}">${item.vacunas}</span>
                     </td>
-                    <td class="p-6">
-                        <button onclick="alert('Abriendo editor para ${pet.nombre}')" class="text-blue-600 hover:underline font-bold text-sm">Editar Ficha</button>
+                    <td class="p-8 text-center">
+                        <button class="bg-white border-2 border-slate-100 p-3 rounded-xl hover:border-blue-600 hover:text-blue-600 transition group-hover:shadow-lg">
+                            <i class="fas fa-edit"></i>
+                        </button>
                     </td>
                 </tr>
             `).join('');
         }
 
-        function logout() { location.reload(); }
+        function logout() {
+            location.reload(); // Reset del estado
+        }
     </script>
 </body>
 </html>
