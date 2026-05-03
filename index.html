@@ -3,181 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VetCare Pro | Expertos en Salud Animal</title>
+    <title>CANAAN Vet | Plataforma Clínica</title>
+    <!-- Tailwind para diseño profesional -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .hero-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
-        .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); }
+        .gradient-brand { background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%); }
+        .admin-sidebar { height: calc(100vh - 64px); }
+        #app-admin, #app-client { display: none; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans">
+<body class="bg-slate-50">
 
-    <!-- 1. HERO SECTION: Jerarquía de Intención (3 segundos) -->
-    <header class="hero-gradient text-white min-h-[80vh] flex items-center relative overflow-hidden">
-        <div class="container mx-auto px-6 relative z-10">
-            <div class="max-w-3xl">
-                <span class="bg-blue-600 text-xs font-bold uppercase px-3 py-1 rounded-full mb-4 inline-block">Atención Prioritaria en Costa Rica</span>
-                <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
-                    Ellos no pueden decirte qué les duele, <span class="text-blue-400">nosotros sí.</span>
-                </h1>
-                <p class="text-xl text-gray-300 mb-8 max-w-xl">
-                    Diagnóstico veterinario avanzado y atención sin esperas. Protegemos a tu compañero con tecnología y empatía.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <button onclick="openBooking()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-8 rounded-lg text-lg transition-all transform hover:scale-105 shadow-xl">
-                        Asegurar atención ahora
-                    </button>
-                    <a href="#servicios" class="border border-gray-500 hover:bg-white/10 text-white font-bold py-4 px-8 rounded-lg text-lg transition-all text-center">
-                        Ver Servicios
-                    </a>
-                </div>
-                <!-- Prueba Social Rápida -->
-                <div class="mt-12 flex items-center gap-4 text-sm text-gray-400">
-                    <div class="flex text-yellow-400">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    </div>
-                    <span>+2,500 Mascotas atendidas con éxito este año.</span>
-                </div>
+    <!-- 1. LANDING PAGE (Visible por defecto) -->
+    <div id="landing-page">
+        <nav class="p-6 flex justify-between items-center bg-white shadow-sm">
+            <h1 class="text-2xl font-bold text-blue-600 italic">CANAAN <span class="font-light text-slate-400">VET</span></h1>
+            <button onclick="toggleAuthModal()" class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700 transition">Entrar al Portal</button>
+        </nav>
+
+        <section class="py-20 container mx-auto px-6 text-center">
+            <h2 class="text-5xl md:text-7xl font-extrabold text-slate-900 mb-6">Salud animal, <br><span class="text-blue-600">gestión profesional.</span></h2>
+            <p class="text-xl text-slate-600 mb-10 max-w-2xl mx-auto">La primera plataforma veterinaria con historial clínico en tiempo real para dueños y médicos en Costa Rica.</p>
+            <div class="flex justify-center gap-4">
+                <button onclick="toggleAuthModal()" class="bg-slate-900 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-2xl">Registrar mi Mascota</button>
             </div>
-        </div>
-    </header>
+            <img src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&q=80&w=1000" alt="Veterinaria" class="mt-16 rounded-3xl shadow-2xl border-8 border-white mx-auto max-w-4xl w-full">
+        </section>
+    </div>
 
-    <!-- 2. SECCIÓN DE SERVICIOS: Soluciones, no características -->
-    <section id="servicios" class="py-20 bg-white">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold mb-4">Especialidades diseñadas para su bienestar</h2>
-                <p class="text-gray-600">Desde controles preventivos hasta cirugías de alta complejidad.</p>
-            </div>
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Servicio 1 -->
-                <div class="p-8 border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
-                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-6 text-xl">
-                        <i class="fas fa-stethoscopes"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Consulta Médica</h3>
-                    <p class="text-gray-600 mb-4 text-sm">Evaluación completa de signos vitales y diagnóstico preventivo para evitar complicaciones futuras.</p>
-                    <span class="text-blue-600 font-bold text-lg">Desde ₡18,000</span>
-                </div>
-                <!-- Servicio 2 -->
-                <div class="p-8 border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
-                    <div class="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mb-6 text-xl">
-                        <i class="fas fa-syringe"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Plan de Vacunación</h3>
-                    <p class="text-gray-600 mb-4 text-sm">Blindaje inmunológico personalizado según la edad y estilo de vida de tu mascota.</p>
-                    <span class="text-blue-600 font-bold text-lg">Desde ₡12,000</span>
-                </div>
-                <!-- Servicio 3 -->
-                <div class="p-8 border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
-                    <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mb-6 text-xl">
-                        <i class="fas fa-cut"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Estética Profesional</h3>
-                    <p class="text-gray-600 mb-4 text-sm">Grooming que prioriza la salud de la piel y el manejo sin estrés del animal.</p>
-                    <span class="text-blue-600 font-bold text-lg">Desde ₡15,000</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 3. MODAL DE CAPTACIÓN INTELIGENTE (Cierre de Venta) -->
-    <div id="bookingModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col md:flex-row">
-            <!-- Sidebar del Modal (Informativo) -->
-            <div class="md:w-1/3 bg-gray-900 text-white p-8">
-                <h3 class="text-2xl font-bold mb-4 italic">CANAAN <span class="text-blue-400 font-normal">Vet</span></h3>
-                <ul class="space-y-4 text-sm text-gray-400">
-                    <li class="flex items-center gap-2"><i class="fas fa-check text-blue-400"></i> Reserva inmediata</li>
-                    <li class="flex items-center gap-2"><i class="fas fa-check text-blue-400"></i> Pago seguro SINPE</li>
-                    <li class="flex items-center gap-2"><i class="fas fa-check text-blue-400"></i> Recordatorio WhatsApp</li>
-                </ul>
-                <div class="mt-8 border-t border-gray-800 pt-8">
-                    <p class="text-xs uppercase tracking-widest text-gray-500 mb-2 font-bold">Resumen de Reserva</p>
-                    <div id="priceDisplay" class="text-3xl font-bold text-white italic">₡0</div>
-                </div>
-            </div>
-
-            <!-- Formulario Dinámico -->
-            <div class="md:w-2/3 p-8">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-xl font-bold">Datos de la mascota</h3>
-                    <button onclick="closeBooking()" class="text-gray-400 hover:text-black"><i class="fas fa-times"></i></button>
-                </div>
-                
-                <form id="bookingForm" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-bold uppercase text-gray-500 mb-1">¿Qué servicio requiere?</label>
-                        <select id="serviceSelect" onchange="updatePrice()" class="w-full border-gray-200 border p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-                            <option value="0" disabled selected>Seleccione un servicio</option>
-                            <option value="18000">Consulta General (₡18,000)</option>
-                            <option value="12000">Vacunación (₡12,000)</option>
-                            <option value="15000">Grooming / Estética (₡15,000)</option>
-                        </select>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Nombre Mascota</label>
-                            <input type="text" placeholder="Ej: Max" class="w-full border-gray-200 border p-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Especie</label>
-                            <select class="w-full border-gray-200 border p-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
-                                <option>Perro</option>
-                                <option>Gato</option>
-                                <option>Exótico</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Tu WhatsApp (para confirmación)</label>
-                        <input type="tel" placeholder="8888-8888" class="w-full border-gray-200 border p-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-
-                    <div class="bg-blue-50 p-4 rounded-lg">
-                        <p class="text-xs text-blue-800 font-medium">
-                            <i class="fas fa-info-circle mr-1"></i> Se requiere el depósito del **25% de la consulta** para confirmar el espacio via SINPE Móvil.
-                        </p>
-                    </div>
-
-                    <button type="submit" class="w-full bg-blue-600 text-white font-bold py-4 rounded-lg shadow-lg hover:bg-blue-700 transition-colors uppercase tracking-widest">
-                        Pagar adelanto y Agendar
-                    </button>
-                </form>
-            </div>
+    <!-- 2. MODAL DE AUTH -->
+    <div id="auth-modal" class="fixed inset-0 bg-slate-900/80 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl">
+            <h3 class="text-2xl font-bold mb-6">Ingresar al Sistema</h3>
+            <input type="email" id="email" placeholder="Correo electrónico" class="w-full border p-3 rounded-lg mb-4">
+            <input type="password" id="pass" placeholder="Contraseña" class="w-full border p-3 rounded-lg mb-6">
+            <button onclick="handleLogin()" class="w-full gradient-brand text-white font-bold py-3 rounded-lg mb-4">Iniciar Sesión</button>
+            <button onclick="toggleAuthModal()" class="w-full text-slate-400 text-sm">Cancelar</button>
         </div>
     </div>
 
-    <!-- 4. LÓGICA DE NEGOCIO (JavaScript) -->
+    <!-- 3. PANEL ADMINISTRATIVO (Para los 6 administradores) -->
+    <div id="app-admin">
+        <nav class="h-16 bg-white border-b flex items-center justify-between px-8">
+            <span class="font-bold text-blue-600">PANEL ADMINISTRATIVO</span>
+            <button onclick="logout()" class="text-red-500 font-bold"><i class="fas fa-sign-out-alt"></i> Salir</button>
+        </nav>
+        <div class="flex">
+            <!-- Sidebar -->
+            <aside class="w-64 bg-slate-900 text-white p-6 admin-sidebar">
+                <ul class="space-y-6">
+                    <li class="flex items-center gap-3 text-blue-400 font-bold cursor-pointer"><i class="fas fa-paw"></i> Mascotas</li>
+                    <li class="flex items-center gap-3 text-slate-400 hover:text-white cursor-pointer"><i class="fas fa-calendar"></i> Citas</li>
+                    <li class="flex items-center gap-3 text-slate-400 hover:text-white cursor-pointer"><i class="fas fa-users"></i> Clientes</li>
+                </ul>
+            </aside>
+            <!-- Contenido Principal -->
+            <main class="flex-1 p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-2xl font-bold italic">Expedientes Clínicos</h2>
+                    <button onclick="openNewPetModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold">+ Nueva Mascota</button>
+                </div>
+                <!-- Tabla de Datos -->
+                <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50 border-b">
+                            <tr>
+                                <th class="p-4 text-xs font-bold text-slate-500 uppercase">Mascota / Dueño</th>
+                                <th class="p-4 text-xs font-bold text-slate-500 uppercase">Raza / Alimento</th>
+                                <th class="p-4 text-xs font-bold text-slate-500 uppercase">Última Vacuna</th>
+                                <th class="p-4 text-xs font-bold text-slate-500 uppercase">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pets-list">
+                            <!-- Los datos de Firebase se cargan aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+
     <script>
-        function openBooking() {
-            document.getElementById('bookingModal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeBooking() {
-            document.getElementById('bookingModal').classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-
-        function updatePrice() {
-            const select = document.getElementById('serviceSelect');
-            const display = document.getElementById('priceDisplay');
-            const price = parseInt(select.value);
-            display.innerText = '₡' + price.toLocaleString('es-CR');
-        }
-
-        document.getElementById('bookingForm').onsubmit = function(e) {
-            e.preventDefault();
-            // Lógica de redirección a WhatsApp para enviar comprobante
-            const phone = "50688888888"; // Reemplazar por número real del negocio
-            const message = "Hola! Quiero confirmar mi cita veterinaria. Ya realicé el depósito del 25% por SINPE Móvil.";
-            window.location.href = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+        // CONFIGURACIÓN DE FIREBASE (Reemplaza con tus datos)
+        const firebaseConfig = {
+            apiKey: "TU_API_KEY",
+            authDomain: "TU_PROYECTO.firebaseapp.com",
+            projectId: "TU_PROYECTO",
+            storageBucket: "TU_PROYECTO.appspot.com",
+            messagingSenderId: "TU_ID",
+            appId: "TU_APP_ID"
         };
-    </script>
+        
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
+        // LOGICA DE INTERFAZ
+        function toggleAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        async function handleLogin() {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('pass').value;
+            try {
+                const userCredential = await auth.signInWithEmailAndPassword(email, pass);
+                checkUserRole(userCredential.user.uid);
+            } catch (error) {
+                alert("Error: " + error.message);
+            }
+        }
+
+        async function checkUserRole(uid) {
+            // Aquí buscarías en tu colección 'users' si el rol es admin
+            document.getElementById('landing-page').style.display = 'none';
+            document.getElementById('auth-modal').classList.add('hidden');
+            document.getElementById('app-admin').style.display = 'block';
+            loadPets();
+        }
+
+        function loadPets() {
+            const list = document.getElementById('pets-list');
+            db.collection("mascotas").onSnapshot((querySnapshot) => {
+                list.innerHTML = "";
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    list.innerHTML += `
+                        <tr class="border-b hover:bg-slate-50">
+                            <td class="p-4">
+                                <div class="font-bold">${data.nombre}</div>
+                                <div class="text-xs text-slate-400">${data.dueno}</div>
+                            </td>
+                            <td class="p-4 text-sm">
+                                <div>${data.raza}</div>
+                                <div class="text-blue-500">${data.alimento}</div>
+                            </td>
+                            <td class="p-4 text-sm font-mono text-slate-500">${data.ultimaVacuna || 'N/A'}</td>
+                            <td class="p-4">
+                                <button class="text-blue-600 hover:underline text-sm font-bold">Editar</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            });
+        }
+
+        function logout() {
+            auth.signOut();
+            location.reload();
+        }
+    </script>
 </body>
 </html>
