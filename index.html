@@ -9,124 +9,293 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
         .hidden-section { display: none !important; }
         .sidebar-link { transition: all 0.3s; cursor: pointer; border-radius: 12px; }
         .sidebar-link:hover, .active-nav { background: #2563eb; color: white; box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4); }
         .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900">
+<body class="text-slate-900 overflow-x-hidden">
+
+    <!-- CONTENEDOR DE ALERTAS DE EMERGENCIA -->
+    <div id="emergency-banner-container" class="fixed top-0 left-0 w-full z-[200] flex flex-col items-center"></div>
 
     <!-- ==========================================
          LANDING PAGE VETERINARIA PRO
          ========================================== -->
-    <div id="view-landing" class="relative">
-        <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md px-12 py-4 flex justify-between items-center border-b">
-            <div class="flex items-center gap-2">
-                <i class="fas fa-heart-pulse text-blue-600 text-2xl"></i>
+    <div id="view-landing" class="relative min-h-screen flex flex-col">
+        <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md px-6 md:px-12 py-4 flex justify-between items-center border-b">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 p-2 rounded-xl">
+                    <i class="fas fa-heart-pulse text-white text-xl"></i>
+                </div>
                 <span class="text-2xl font-black italic">CANAAN <span class="text-blue-600">VET</span></span>
             </div>
-            <button onclick="toggleModal('modal-auth')" class="bg-slate-900 text-white px-8 py-3 rounded-2xl font-bold hover:bg-blue-600 transition">Portal Clínico</button>
+            <button onclick="window.toggleModal('modal-auth')" class="bg-slate-900 text-white px-6 md:px-8 py-3 rounded-2xl font-bold hover:bg-blue-600 transition shadow-lg">Portal Clínico</button>
         </nav>
 
-        <section class="pt-48 pb-20 px-12 bg-gradient-to-b from-blue-50 to-white">
+        <section class="flex-1 pt-32 pb-20 px-6 md:px-12 bg-gradient-to-br from-blue-50 via-white to-slate-50 flex items-center">
             <div class="container mx-auto grid md:grid-cols-2 gap-12 items-center">
-                <div class="space-y-6">
-                    <h1 class="text-7xl font-black leading-tight tracking-tighter">Hospital <span class="text-blue-600">Especializado</span> de Alta Complejidad.</h1>
-                    <p class="text-xl text-slate-500">Más de 10 servicios médicos avanzados con expediente digital y comunicación directa con su especialista.</p>
-                    <div class="flex gap-4">
-                        <button onclick="toggleModal('modal-auth')" class="bg-blue-600 text-white px-10 py-5 rounded-3xl font-black text-xl shadow-2xl hover:scale-105 transition">AGENDAR CITA AHORA</button>
+                <div class="space-y-8 relative z-10">
+                    <div class="inline-block bg-blue-100 text-blue-700 font-bold px-4 py-2 rounded-full text-sm mb-4">
+                        <i class="fas fa-star mr-2"></i>Centro de Excelencia Veterinaria
+                    </div>
+                    <h1 class="text-6xl md:text-7xl font-black leading-tight tracking-tighter text-slate-900">
+                        Hospital <span class="text-blue-600">Especializado</span> de Alta Complejidad.
+                    </h1>
+                    <p class="text-xl text-slate-600 font-medium max-w-lg">
+                        Más de 10 servicios médicos avanzados con expediente digital y comunicación directa con su especialista en tiempo real.
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-4">
+                        <button onclick="window.toggleModal('modal-auth')" class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-black text-lg shadow-xl shadow-blue-600/30 hover:-translate-y-1 transition transform duration-300">
+                            AGENDAR CITA AHORA
+                        </button>
                     </div>
                 </div>
-                <img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&q=80&w=800" class="rounded-[4rem] shadow-2xl border-[15px] border-white">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-blue-600 rounded-[3rem] transform rotate-3 scale-105 opacity-10"></div>
+                    <img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&q=80&w=800" class="relative rounded-[3rem] shadow-2xl border-8 border-white object-cover h-[600px] w-full" alt="Veterinaria">
+                </div>
             </div>
         </section>
     </div>
 
     <!-- ==========================================
-         SISTEMA ADMIN / MÉDICO / JEFE
+         SISTEMA ADMIN / MÉDICO / CLIENTE
          ========================================== -->
-    <div id="view-system" class="hidden-section flex min-h-screen">
+    <div id="view-system" class="hidden-section flex h-screen overflow-hidden bg-slate-50">
         <!-- Sidebar Dinámico -->
-        <aside class="w-80 bg-slate-900 text-slate-400 p-8 flex flex-col fixed h-full shadow-2xl">
-            <div class="mb-12 flex items-center gap-2 text-white">
-                <i class="fas fa-microscope text-blue-500"></i>
-                <span class="text-xl font-black italic uppercase">CANAAN <span class="text-blue-500 text-sm">OS</span></span>
+        <aside class="w-72 bg-slate-900 text-slate-400 p-6 flex flex-col shadow-2xl relative z-20">
+            <div class="mb-10 flex items-center gap-3 text-white">
+                <div class="bg-blue-600/20 p-2 rounded-xl">
+                    <i class="fas fa-microscope text-blue-500 text-xl"></i>
+                </div>
+                <span class="text-xl font-black italic uppercase tracking-wider">CANAAN <span class="text-blue-500">OS</span></span>
             </div>
-            <nav id="sidebar-nav" class="flex-1 space-y-2">
+            <nav id="sidebar-nav" class="flex-1 space-y-2 overflow-y-auto pr-2 custom-scrollbar">
                 <!-- Se llena por JS según el rol -->
             </nav>
-            <div class="mt-auto pt-8 border-t border-slate-800">
-                <button onclick="location.reload()" class="text-red-400 font-bold hover:text-red-200"><i class="fas fa-sign-out-alt mr-2"></i> Salir del Sistema</button>
+            <div class="mt-auto pt-6 border-t border-slate-800">
+                <button onclick="window.handleLogout()" class="w-full text-left p-3 text-red-400 font-bold hover:bg-red-500/10 rounded-xl transition flex items-center gap-3">
+                    <i class="fas fa-sign-out-alt"></i> Salir del Sistema
+                </button>
             </div>
         </aside>
 
         <!-- Contenedor de Ventanas -->
-        <main class="flex-1 ml-80 p-12 overflow-y-auto h-screen">
-            <header class="flex justify-between items-center mb-12">
-                <h2 id="window-title" class="text-4xl font-black italic">Dashboard Principal</h2>
-                <div id="user-badge" class="flex items-center gap-4 bg-white p-3 px-6 rounded-2xl border shadow-sm">
-                    <div class="text-right">
-                        <p id="profile-display-name" class="font-black text-sm uppercase">Cargando...</p>
-                        <p id="profile-role" class="text-[10px] text-blue-600 font-bold uppercase tracking-widest"></p>
+        <main class="flex-1 flex flex-col h-screen relative z-10">
+            <header class="bg-white px-10 py-6 border-b flex justify-between items-center shadow-sm z-10">
+                <h2 id="window-title" class="text-3xl font-black italic text-slate-800">Cargando...</h2>
+                <div class="flex items-center gap-6">
+                    <!-- Botón Emergencia (Solo Clientes) -->
+                    <button id="btn-reportar-emergencia" onclick="window.reportarEmergencia()" class="hidden bg-red-600 text-white px-5 py-2 rounded-xl font-bold hover:bg-red-700 shadow-lg shadow-red-600/30 animate-pulse">
+                        <i class="fas fa-truck-medical mr-2"></i> SOS Emergencia
+                    </button>
+                    
+                    <div id="user-badge" class="flex items-center gap-4 bg-slate-50 p-2 pr-6 rounded-full border shadow-sm cursor-pointer hover:bg-slate-100 transition">
+                        <img src="https://ui-avatars.com/api/?name=User&background=2563eb&color=fff" id="profile-img" class="w-10 h-10 rounded-full border-2 border-blue-600 shadow-sm">
+                        <div class="text-left">
+                            <p id="profile-display-name" class="font-bold text-sm text-slate-900 leading-tight">Cargando...</p>
+                            <p id="profile-role" class="text-[10px] text-blue-600 font-black uppercase tracking-widest"></p>
+                        </div>
                     </div>
-                    <img src="https://i.pravatar.cc/100" class="w-10 h-10 rounded-full border-2 border-blue-600">
                 </div>
             </header>
 
-            <div id="content-area">
+            <div id="content-area" class="flex-1 p-10 overflow-y-auto bg-slate-50">
                 <!-- El contenido de las ventanas se inyecta aquí -->
+                <div class="flex items-center justify-center h-full">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                </div>
             </div>
         </main>
     </div>
 
     <!-- ==========================================
-         MODALES Y LOGICA
+         MODALES Y COMPONENTES
          ========================================== -->
-    <div id="modal-auth" class="fixed inset-0 z-[100] hidden bg-slate-900/90 backdrop-blur-md flex items-center justify-center p-6">
-        <div class="bg-white rounded-[3rem] p-12 max-w-md w-full">
-            <h2 class="text-3xl font-black text-center mb-8 uppercase italic">Acceso <span class="text-blue-600">Canaan</span></h2>
-            <div class="space-y-4">
-                <input type="email" id="input-user" placeholder="Correo (ej: jefe@canaan.com)" class="w-full bg-slate-100 p-5 rounded-2xl outline-none border-2 focus:border-blue-600 font-bold">
-                <input type="password" id="input-pass" placeholder="Contraseña" class="w-full bg-slate-100 p-5 rounded-2xl outline-none border-2 focus:border-blue-600 font-bold">
-                <button onclick="handleLogin()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-xl">INGRESAR</button>
-                <button onclick="toggleModal('modal-auth')" class="w-full text-slate-400 font-bold text-sm">Cancelar</button>
+    <!-- Modal Auth -->
+    <div id="modal-auth" class="fixed inset-0 z-[100] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6 transition-opacity">
+        <div class="bg-white rounded-[2rem] p-10 max-w-md w-full shadow-2xl relative">
+            <button onclick="window.toggleModal('modal-auth')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-900">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            <div class="text-center mb-8">
+                <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-shield-cat text-3xl text-blue-600"></i>
+                </div>
+                <h2 class="text-2xl font-black uppercase italic">Acceso <span class="text-blue-600">Canaan</span></h2>
+                <p class="text-sm text-slate-500 font-medium mt-1">Ingresa tus credenciales del sistema</p>
+            </div>
+            
+            <div class="space-y-5">
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase ml-1">Correo Electrónico</label>
+                    <input type="email" id="input-user" placeholder="ej: jefe@canaan.com" class="w-full bg-slate-50 p-4 rounded-xl outline-none border focus:border-blue-600 focus:ring-2 focus:ring-blue-100 font-semibold transition mt-1" value="jefe@canaan.com">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase ml-1">Contraseña</label>
+                    <input type="password" id="input-pass" placeholder="••••••••" class="w-full bg-slate-50 p-4 rounded-xl outline-none border focus:border-blue-600 focus:ring-2 focus:ring-blue-100 font-semibold transition mt-1" value="MasterAdmin2026">
+                </div>
+                
+                <!-- Helper de Cuentas Demo -->
+                <div class="text-[10px] text-slate-500 bg-slate-100 p-3 rounded-lg mt-2">
+                    <p class="font-bold mb-1">Cuentas Demo Rápidas:</p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="document.getElementById('input-user').value='jefe@canaan.com'; document.getElementById('input-pass').value='MasterAdmin2026'" class="text-left hover:text-blue-600">1. Admin (Jefe)</button>
+                        <button onclick="document.getElementById('input-user').value='medico@canaan.com'; document.getElementById('input-pass').value='VetCanaan01'" class="text-left hover:text-blue-600">2. Médico</button>
+                        <button onclick="document.getElementById('input-user').value='cliente@canaan.com'; document.getElementById('input-pass').value='Mascota2026'" class="text-left hover:text-blue-600">3. Cliente</button>
+                    </div>
+                </div>
+
+                <button id="btn-login" onclick="window.handleLogin()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black text-lg shadow-lg hover:bg-blue-700 transition relative">
+                    <span id="login-text">INGRESAR AL SISTEMA</span>
+                    <i id="login-spinner" class="fas fa-circle-notch fa-spin absolute right-6 top-1/2 -translate-y-1/2 hidden"></i>
+                </button>
             </div>
         </div>
     </div>
 
-    <script>
-        let currentUser = null;
+    <!-- ==========================================
+         LÓGICA PRINCIPAL (FIREBASE + MÓDULOS)
+         ========================================== -->
+    <script type="module">
+        // Importar Firebase v11 (ES Modules)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, onSnapshot, doc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const ROLES = {
-            JEFE: 'JEFE',
-            MEDICO: 'MEDICO',
-            CLIENTE: 'CLIENTE'
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDqrwFApXM1iN9fEyzlTX2JHt8qo7I5BBg",
+            authDomain: "veterinaria-211ab.firebaseapp.com",
+            projectId: "veterinaria-211ab",
+            storageBucket: "veterinaria-211ab.firebasestorage.app",
+            messagingSenderId: "701465566306",
+            appId: "1:701465566306:web:105119dae86f479d3b453b",
+            measurementId: "G-MFM9YBT109"
         };
 
-        function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
-
-        function handleLogin() {
-            const user = document.getElementById('input-user').value;
-            const pass = document.getElementById('input-pass').value;
-
-            if(user === 'jefe@canaan.com' && pass === 'MasterAdmin2026') currentUser = { role: ROLES.JEFE, name: 'Administrador Jefe' };
-            else if(user === 'medico1@canaan.com' && pass === 'VetCanaan01') currentUser = { role: ROLES.MEDICO, name: 'Dr. Roberto Vargas' };
-            else if(user === 'cliente@mascota.com' && pass === 'Mascota2026') currentUser = { role: ROLES.CLIENTE, name: 'Juan Perez' };
-            else return alert("Datos incorrectos");
-
-            document.getElementById('view-landing').classList.add('hidden-section');
-            document.getElementById('view-system').classList.remove('hidden-section');
-            toggleModal('modal-auth');
-            initSystem();
+        // Inicializar Firebase
+        let app, auth, db;
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            console.log("Firebase Inicializado correctamente.");
+        } catch (error) {
+            console.error("Error inicializando Firebase:", error);
         }
 
+        // Estado Global
+        let currentUser = null;
+        let unsubscribeEmergencies = null;
+        const ROLES = { JEFE: 'JEFE', MEDICO: 'MEDICO', CLIENTE: 'CLIENTE' };
+
+        // ==========================================
+        // UTILIDADES Y DOM
+        // ==========================================
+        window.toggleModal = (id) => document.getElementById(id).classList.toggle('hidden');
+        
+        // ==========================================
+        // FUNCIONES DE INTERACCIÓN GLOBAL (BOTONES MOCK)
+        // ==========================================
+        window.agregarMedico = () => {
+            const nombre = prompt("Ingrese el nombre del nuevo médico:");
+            if(nombre) alert(`El médico Dr/a. ${nombre} ha sido agregado exitosamente al directorio.`);
+        };
+        
+        window.agregarEmpleado = () => {
+            const nombre = prompt("Ingrese el nombre del nuevo empleado:");
+            if(nombre) alert(`El empleado ${nombre} ha sido registrado en el sistema de nómina.`);
+        };
+        
+        window.registrarMascota = () => {
+            const nombre = prompt("Nombre de la mascota a registrar:");
+            if(nombre) alert(`¡Mascota ${nombre} registrada! Ahora puedes agendar citas para ella.`);
+        };
+        
+        window.agregarNotaMedica = () => {
+            const nota = prompt("Escriba la nueva observación clínica para el expediente:");
+            if(nota) alert("Nota médica guardada y añadida al expediente oficial.");
+        };
+
+        window.verDocumentoOrden = () => alert("Descargando documento PDF de la orden de compra...");
+        window.liquidarOrden = () => alert("Orden liquidada correctamente. El inventario ha sido actualizado.");
+        window.buscarEnvio = () => alert("Buscando información de logística en tiempo real...");
+        window.verCalendarioCompleto = () => alert("Abriendo calendario mensual...");
+
+        // ==========================================
+        // AUTENTICACIÓN
+        // ==========================================
+        window.handleLogin = async () => {
+            const email = document.getElementById('input-user').value;
+            const pass = document.getElementById('input-pass').value;
+            const btnText = document.getElementById('login-text');
+            const spinner = document.getElementById('login-spinner');
+
+            if(!email || !pass) return alert("Por favor ingresa usuario y contraseña.");
+
+            btnText.innerText = "VERIFICANDO...";
+            spinner.classList.remove('hidden');
+
+            try {
+                let roleMock = ROLES.CLIENTE;
+                let nameMock = "Juan Pérez";
+
+                if (email.includes('jefe')) { roleMock = ROLES.JEFE; nameMock = "Administrador Jefe"; }
+                else if (email.includes('medico')) { roleMock = ROLES.MEDICO; nameMock = "Dr. Roberto Vargas"; }
+
+                currentUser = { 
+                    uid: `mock-uid-${Date.now()}`, 
+                    email: email, 
+                    role: roleMock, 
+                    name: nameMock 
+                };
+
+                document.getElementById('view-landing').classList.add('hidden-section');
+                document.getElementById('view-system').classList.remove('hidden-section');
+                window.toggleModal('modal-auth');
+                
+                initSystem();
+            } catch (error) {
+                alert("Error de acceso: " + error.message);
+            } finally {
+                btnText.innerText = "INGRESAR AL SISTEMA";
+                spinner.classList.add('hidden');
+            }
+        };
+
+        window.handleLogout = () => {
+            if(unsubscribeEmergencies) unsubscribeEmergencies();
+            currentUser = null;
+            document.getElementById('view-system').classList.add('hidden-section');
+            document.getElementById('view-landing').classList.remove('hidden-section');
+            document.getElementById('emergency-banner-container').innerHTML = ''; // Limpiar alertas
+        };
+
+        // ==========================================
+        // INICIALIZACIÓN DEL SISTEMA
+        // ==========================================
         function initSystem() {
             document.getElementById('profile-display-name').innerText = currentUser.name;
             document.getElementById('profile-role').innerText = currentUser.role;
+            document.getElementById('profile-img').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=2563eb&color=fff`;
+
+            const btnEmergencia = document.getElementById('btn-reportar-emergencia');
+            if (currentUser.role === ROLES.CLIENTE) btnEmergencia.classList.remove('hidden');
+            else btnEmergencia.classList.add('hidden');
+
             renderSidebar();
-            loadWindow('dashboard');
+            
+            if(currentUser.role === ROLES.JEFE) window.loadWindow('dashboard');
+            else if(currentUser.role === ROLES.MEDICO) window.loadWindow('citas');
+            else window.loadWindow('mascotas');
+
+            if(currentUser.role === ROLES.JEFE || currentUser.role === ROLES.MEDICO) {
+                escucharEmergencias();
+            }
         }
 
         function renderSidebar() {
@@ -136,154 +305,692 @@
             if(currentUser.role === ROLES.JEFE) {
                 links = [
                     { id: 'dashboard', icon: 'fa-chart-line', label: 'Dashboard General' },
-                    { id: 'rendimiento', icon: 'fa-user-tie', label: 'Rendimiento Médicos' },
-                    { id: 'proveedores', icon: 'fa-truck-ramp-box', label: 'Proveedores' },
-                    { id: 'pagos', icon: 'fa-file-invoice-dollar', label: 'Arreglos de Pago' },
-                    { id: 'envios', icon: 'fa-paper-plane', label: 'Envíos Logística' },
-                    { id: 'perfil', icon: 'fa-user-gear', label: 'Mi Perfil' }
+                    { id: 'staff_medico', icon: 'fa-user-doctor', label: 'Staff Médico' },
+                    { id: 'empleados', icon: 'fa-users', label: 'Empleados' },
+                    { id: 'clientes', icon: 'fa-address-book', label: 'Clientes y Mascotas' },
+                    { id: 'proveedores', icon: 'fa-truck-ramp-box', label: 'Proveedores & Stock' },
+                    { id: 'envios', icon: 'fa-paper-plane', label: 'Logística de Envíos' },
+                    { id: 'pagos', icon: 'fa-file-invoice-dollar', label: 'Finanzas' }
                 ];
             } else if(currentUser.role === ROLES.MEDICO) {
                 links = [
-                    { id: 'citas', icon: 'fa-calendar-day', label: 'Citas del Día' },
-                    { id: 'pacientes', icon: 'fa-paw', label: 'Mis Pacientes' },
-                    { id: 'intervenciones', icon: 'fa-notes-medical', label: 'Historial Intervenciones' },
-                    { id: 'perfil', icon: 'fa-user-gear', label: 'Mi Perfil' }
+                    { id: 'citas', icon: 'fa-calendar-day', label: 'Agenda Diaria' },
+                    { id: 'pacientes', icon: 'fa-paw', label: 'Pacientes Activos' },
+                    { id: 'intervenciones', icon: 'fa-notes-medical', label: 'Historial Clínico' }
                 ];
             } else {
                 links = [
-                    { id: 'mascota', icon: 'fa-dog', label: 'Mi Mascota' },
+                    { id: 'mascotas', icon: 'fa-dog', label: 'Mis Mascotas' },
                     { id: 'agendar', icon: 'fa-calendar-plus', label: 'Reservar Cita' },
-                    { id: 'historial', icon: 'fa-book-medical', label: 'Mis Observaciones' },
-                    { id: 'perfil', icon: 'fa-user-gear', label: 'Mi Perfil' }
+                    { id: 'historial', icon: 'fa-book-medical', label: 'Expedientes' }
                 ];
             }
 
+            links.push({ id: 'perfil', icon: 'fa-user-gear', label: 'Mi Perfil' });
+
             nav.innerHTML = links.map(link => `
-                <div onclick="loadWindow('${link.id}')" class="sidebar-link p-4 flex items-center gap-4 font-bold">
-                    <i class="fas ${link.icon} w-6"></i> ${link.label}
+                <div onclick="window.loadWindow('${link.id}', this)" class="sidebar-link p-4 flex items-center gap-4 font-bold text-sm mb-1 hover:text-white">
+                    <i class="fas ${link.icon} w-6 text-center text-blue-500"></i> 
+                    <span>${link.label}</span>
                 </div>
             `).join('');
+            
+            setTimeout(() => {
+                const firstLink = nav.querySelector('.sidebar-link');
+                if(firstLink) firstLink.classList.add('active-nav');
+            }, 50);
         }
 
-        function loadWindow(id) {
+        // ==========================================
+        // GESTOR DE VENTANAS (MÓDULOS)
+        // ==========================================
+        window.loadWindow = (id, element = null) => {
             const content = document.getElementById('content-area');
             const title = document.getElementById('window-title');
             
+            if(element) {
+                document.querySelectorAll('.sidebar-link').forEach(el => el.classList.remove('active-nav'));
+                element.classList.add('active-nav');
+            }
+
             let html = '';
             
             switch(id) {
-                case 'dashboard':
+                case 'dashboard': // JEFE
                     title.innerText = "Dashboard General";
                     html = `
-                        <div class="grid grid-cols-3 gap-6">
-                            <div class="bg-white p-8 rounded-3xl border shadow-sm">
-                                <p class="text-xs font-black text-slate-400 uppercase">Caja del Día</p>
-                                <p class="text-3xl font-black text-blue-600">₡975,000</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                            <div class="bg-white p-6 rounded-[2rem] border shadow-sm relative overflow-hidden group hover:shadow-md transition">
+                                <div class="absolute -right-6 -top-6 bg-blue-50 w-24 h-24 rounded-full group-hover:scale-110 transition duration-500"></div>
+                                <p class="text-xs font-black text-slate-400 uppercase relative z-10">Ingresos del Día</p>
+                                <p class="text-4xl font-black text-blue-600 mt-2 relative z-10">₡975,000</p>
+                                <p class="text-xs text-green-500 font-bold mt-2 relative z-10"><i class="fas fa-arrow-up"></i> 12% vs Ayer</p>
                             </div>
-                            <div class="bg-white p-8 rounded-3xl border shadow-sm">
+                            <div class="bg-white p-6 rounded-[2rem] border shadow-sm relative overflow-hidden group hover:shadow-md transition">
                                 <p class="text-xs font-black text-slate-400 uppercase">Citas Completadas</p>
-                                <p class="text-3xl font-black">12/15</p>
+                                <p class="text-4xl font-black text-slate-800 mt-2">18 / 24</p>
+                                <div class="w-full bg-slate-100 rounded-full h-2 mt-4">
+                                    <div class="bg-blue-600 h-2 rounded-full" style="width: 75%"></div>
+                                </div>
                             </div>
-                            <div class="bg-white p-8 rounded-3xl border shadow-sm">
-                                <p class="text-xs font-black text-slate-400 uppercase">Pacientes en Observación</p>
-                                <p class="text-3xl font-black text-amber-600">4</p>
+                            <div class="bg-white p-6 rounded-[2rem] border shadow-sm border-amber-200 bg-amber-50 relative overflow-hidden">
+                                <i class="fas fa-exclamation-triangle absolute right-4 bottom-4 text-6xl text-amber-500/10"></i>
+                                <p class="text-xs font-black text-amber-700 uppercase">Pacientes en UCI</p>
+                                <p class="text-4xl font-black text-amber-600 mt-2">4 Activos</p>
+                                <button onclick="window.loadWindow('clientes')" class="mt-4 text-sm font-bold text-amber-700 underline">Ver Reportes Clientes</button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Actividad Reciente -->
+                            <div class="bg-white p-6 rounded-[2rem] border shadow-sm">
+                                <h3 class="font-bold text-lg mb-4">Actividad Reciente</h3>
+                                <div class="space-y-4">
+                                    <div class="flex gap-4 items-start">
+                                        <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 flex-shrink-0"><i class="fas fa-check"></i></div>
+                                        <div>
+                                            <p class="font-bold text-sm">Cirugía Dental Max</p>
+                                            <p class="text-xs text-slate-500">Dr. Roberto completó el procedimiento sin complicaciones.</p>
+                                        </div>
+                                        <span class="text-[10px] text-slate-400 font-bold ml-auto">Hace 10m</span>
+                                    </div>
+                                    <div class="flex gap-4 items-start">
+                                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0"><i class="fas fa-calendar"></i></div>
+                                        <div>
+                                            <p class="font-bold text-sm">Nueva Cita Agendada</p>
+                                            <p class="text-xs text-slate-500">Cliente 'Juan P.' para Dermatología mañana.</p>
+                                        </div>
+                                        <span class="text-[10px] text-slate-400 font-bold ml-auto">Hace 25m</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Alertas de Inventario -->
+                            <div class="bg-white p-6 rounded-[2rem] border shadow-sm">
+                                <h3 class="font-bold text-lg mb-4 flex justify-between items-center">
+                                    <span>Stock Crítico</span>
+                                    <button onclick="window.loadWindow('proveedores')" class="text-blue-600 text-xs hover:underline">Ver Inventario</button>
+                                </h3>
+                                <div class="space-y-3">
+                                    <div class="p-3 bg-red-50 border border-red-100 rounded-xl flex justify-between items-center">
+                                        <div class="flex items-center gap-3">
+                                            <i class="fas fa-syringe text-red-500"></i>
+                                            <span class="font-bold text-sm text-red-900">Vacuna Pentavalente</span>
+                                        </div>
+                                        <span class="bg-red-200 text-red-800 text-[10px] font-black px-2 py-1 rounded-full">Quedan 2</span>
+                                    </div>
+                                    <div class="p-3 bg-amber-50 border border-amber-100 rounded-xl flex justify-between items-center">
+                                        <div class="flex items-center gap-3">
+                                            <i class="fas fa-pills text-amber-500"></i>
+                                            <span class="font-bold text-sm text-amber-900">Antiparasitario NexGard</span>
+                                        </div>
+                                        <span class="bg-amber-200 text-amber-800 text-[10px] font-black px-2 py-1 rounded-full">Quedan 8</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     `;
                     break;
-                case 'rendimiento':
-                    title.innerText = "Rendimiento de Empleados";
+
+                case 'staff_medico': // JEFE
+                    title.innerText = "Directorio Staff Médico";
                     html = `
-                        <div class="bg-white rounded-3xl border overflow-hidden">
-                            <table class="w-full text-left">
-                                <thead class="bg-slate-50 text-xs font-black uppercase">
-                                    <tr><th class="p-6">Médico</th><th class="p-6">Citas Mes</th><th class="p-6">Facturación</th><th class="p-6">Rating</th></tr>
+                        <div class="bg-white p-8 rounded-[2rem] border shadow-sm">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="font-black text-2xl">Médicos Activos</h3>
+                                <button onclick="window.agregarMedico()" class="bg-blue-600 text-white px-5 py-3 rounded-xl text-sm font-bold hover:bg-blue-700 transition shadow">
+                                    <i class="fas fa-user-doctor mr-2"></i>+ Agregar Médico
+                                </button>
+                            </div>
+                            <table class="w-full text-left mt-4">
+                                <thead class="text-xs text-slate-400 uppercase font-black border-b">
+                                    <tr><th class="pb-3">Nombre del Especialista</th><th class="pb-3">Especialidad</th><th class="pb-3">Citas Mes</th><th class="pb-3">Estado</th><th class="pb-3">Acción</th></tr>
                                 </thead>
-                                <tbody>
-                                    <tr class="border-t">
-                                        <td class="p-6 font-bold">Dr. Roberto Vargas</td>
-                                        <td class="p-6">45</td>
-                                        <td class="p-6 text-blue-600 font-bold">₡1.2M</td>
-                                        <td class="p-6 text-amber-500">★★★★★</td>
+                                <tbody class="text-sm">
+                                    <tr class="border-b hover:bg-slate-50 transition">
+                                        <td class="py-4 flex items-center gap-3">
+                                            <img src="https://ui-avatars.com/api/?name=Roberto+Vargas&background=random" class="w-10 h-10 rounded-full">
+                                            <span class="font-bold text-slate-800">Dr. Roberto Vargas</span>
+                                        </td>
+                                        <td class="py-4 text-slate-600">Cirugía General</td>
+                                        <td class="py-4 font-bold text-blue-600">45</td>
+                                        <td class="py-4"><span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-[10px] font-black">Activo</span></td>
+                                        <td class="py-4"><button onclick="alert('Abriendo agenda de Dr. Roberto Vargas')" class="text-blue-600 font-bold hover:underline">Ver Agenda</button></td>
+                                    </tr>
+                                    <tr class="border-b hover:bg-slate-50 transition">
+                                        <td class="py-4 flex items-center gap-3">
+                                            <img src="https://ui-avatars.com/api/?name=Maria+Elena&background=random" class="w-10 h-10 rounded-full">
+                                            <span class="font-bold text-slate-800">Dra. Maria Elena</span>
+                                        </td>
+                                        <td class="py-4 text-slate-600">Dermatología</td>
+                                        <td class="py-4 font-bold text-blue-600">32</td>
+                                        <td class="py-4"><span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-[10px] font-black">Activo</span></td>
+                                        <td class="py-4"><button onclick="alert('Abriendo agenda de Dra. Maria Elena')" class="text-blue-600 font-bold hover:underline">Ver Agenda</button></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     `;
                     break;
-                case 'pacientes':
-                case 'intervenciones':
-                    title.innerText = "Historial Clínico";
+
+                case 'empleados': // JEFE
+                    title.innerText = "Gestión de Empleados (Nómina)";
                     html = `
-                        <div class="bg-white p-8 rounded-3xl border">
-                            <div class="flex justify-between items-center mb-8">
-                                <h3 class="text-xl font-bold italic">Paciente: MAX (Golden Retriever)</h3>
-                                <button onclick="exportToPDF()" class="bg-red-600 text-white px-6 py-2 rounded-xl font-bold">Exportar PDF</button>
+                        <div class="bg-white p-8 rounded-[2rem] border shadow-sm">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="font-black text-2xl">Personal Administrativo y Soporte</h3>
+                                <button onclick="window.agregarEmpleado()" class="bg-slate-900 text-white px-5 py-3 rounded-xl text-sm font-bold hover:bg-slate-800 transition shadow">
+                                    <i class="fas fa-user-plus mr-2"></i>+ Agregar Empleado
+                                </button>
                             </div>
-                            <div class="space-y-4">
-                                <div class="p-4 bg-slate-50 rounded-xl border">
-                                    <p class="font-black">02/05/2026 - Cirugía Dental</p>
-                                    <p class="text-sm">Observación: Limpieza profunda realizada sin complicaciones. Sedación exitosa.</p>
+                            <table class="w-full text-left mt-4">
+                                <thead class="text-xs text-slate-400 uppercase font-black border-b">
+                                    <tr><th class="pb-3">Nombre del Empleado</th><th class="pb-3">Puesto / Rol</th><th class="pb-3">Turno</th><th class="pb-3">Acción</th></tr>
+                                </thead>
+                                <tbody class="text-sm">
+                                    <tr class="border-b hover:bg-slate-50 transition">
+                                        <td class="py-4 font-bold text-slate-800">Ana Lucía Morales</td>
+                                        <td class="py-4 text-slate-600">Recepcionista</td>
+                                        <td class="py-4">Mañana (7AM - 3PM)</td>
+                                        <td class="py-4"><button onclick="alert('Editando rol de Ana Lucía Morales')" class="text-slate-500 hover:text-blue-600"><i class="fas fa-edit"></i> Editar</button></td>
+                                    </tr>
+                                    <tr class="border-b hover:bg-slate-50 transition">
+                                        <td class="py-4 font-bold text-slate-800">Carlos Méndez</td>
+                                        <td class="py-4 text-slate-600">Motorizado Logística</td>
+                                        <td class="py-4">Completo (8AM - 5PM)</td>
+                                        <td class="py-4"><button onclick="alert('Editando rol de Carlos Méndez')" class="text-slate-500 hover:text-blue-600"><i class="fas fa-edit"></i> Editar</button></td>
+                                    </tr>
+                                    <tr class="border-b hover:bg-slate-50 transition">
+                                        <td class="py-4 font-bold text-slate-800">Sofia Castro</td>
+                                        <td class="py-4 text-slate-600">Peluquería / Grooming</td>
+                                        <td class="py-4">Tarde (12PM - 8PM)</td>
+                                        <td class="py-4"><button onclick="alert('Editando rol de Sofia Castro')" class="text-slate-500 hover:text-blue-600"><i class="fas fa-edit"></i> Editar</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                    break;
+                
+                case 'clientes': // JEFE
+                    title.innerText = "Directorio de Clientes y Mascotas";
+                    html = `
+                        <div class="bg-white p-8 rounded-[2rem] border shadow-sm">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="font-black text-2xl">Seguimiento de Clientes</h3>
+                                <div class="flex gap-2">
+                                    <input type="text" placeholder="Buscar cliente o mascota..." class="bg-slate-50 border px-4 py-2 rounded-xl outline-none text-sm font-medium">
+                                    <button onclick="alert('Buscando en la base de datos...')" class="bg-blue-600 text-white px-4 py-2 rounded-xl font-bold"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                            <table class="w-full text-left mt-4">
+                                <thead class="text-xs text-slate-400 uppercase font-black border-b">
+                                    <tr><th class="pb-3">Propietario</th><th class="pb-3">Contacto</th><th class="pb-3">Mascotas Registradas</th><th class="pb-3">Acción</th></tr>
+                                </thead>
+                                <tbody class="text-sm">
+                                    <tr class="border-b hover:bg-slate-50 transition">
+                                        <td class="py-4 font-bold text-slate-800">Juan Pérez</td>
+                                        <td class="py-4 text-slate-600 text-xs"><i class="fas fa-phone mr-1"></i> 8888-1111<br><i class="fas fa-envelope mr-1"></i> juan@mail.com</td>
+                                        <td class="py-4">
+                                            <span class="inline-flex items-center gap-1 bg-blue-50 text-blue-700 px-2 py-1 rounded-lg text-xs font-bold mr-1"><i class="fas fa-dog"></i> MAX</span>
+                                            <span class="inline-flex items-center gap-1 bg-slate-100 text-slate-700 px-2 py-1 rounded-lg text-xs font-bold"><i class="fas fa-cat"></i> LUNA</span>
+                                        </td>
+                                        <td class="py-4"><button onclick="window.loadWindow('intervenciones')" class="bg-slate-900 text-white px-3 py-1 rounded-lg text-xs font-bold hover:bg-slate-800">Ver Expedientes</button></td>
+                                    </tr>
+                                    <tr class="border-b hover:bg-slate-50 transition">
+                                        <td class="py-4 font-bold text-slate-800">Andrea Salas</td>
+                                        <td class="py-4 text-slate-600 text-xs"><i class="fas fa-phone mr-1"></i> 8765-4321<br><i class="fas fa-envelope mr-1"></i> andrea@mail.com</td>
+                                        <td class="py-4">
+                                            <span class="inline-flex items-center gap-1 bg-amber-50 text-amber-700 px-2 py-1 rounded-lg text-xs font-bold"><i class="fas fa-dog"></i> ROCKY</span>
+                                        </td>
+                                        <td class="py-4"><button onclick="window.loadWindow('intervenciones')" class="bg-slate-900 text-white px-3 py-1 rounded-lg text-xs font-bold hover:bg-slate-800">Ver Expedientes</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                    break;
+                
+                case 'proveedores': // JEFE
+                    title.innerText = "Gestión de Proveedores e Inventario";
+                    html = `
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <!-- Órdenes de Compra -->
+                            <div class="lg:col-span-2 space-y-6">
+                                <div class="bg-white p-6 rounded-[2rem] border shadow-sm">
+                                    <div class="flex justify-between items-center mb-6">
+                                        <h3 class="font-black text-xl">Órdenes de Compra Activas</h3>
+                                        <button onclick="alert('Abriendo formulario de nueva orden de compra...')" class="bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-bold">+ Nueva Orden</button>
+                                    </div>
+                                    <table class="w-full text-left">
+                                        <thead class="text-xs text-slate-400 uppercase font-black border-b">
+                                            <tr><th class="pb-3">Proveedor</th><th class="pb-3">Monto</th><th class="pb-3">Estado</th><th class="pb-3">Acción</th></tr>
+                                        </thead>
+                                        <tbody class="text-sm">
+                                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition">
+                                                <td class="py-4 font-bold">PharmaVet S.A. <span class="block text-xs text-slate-500 font-normal">Medicamentos Controlados</span></td>
+                                                <td class="py-4">₡1,250,000</td>
+                                                <td class="py-4"><span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-bold">En Tránsito</span></td>
+                                                <td class="py-4"><button onclick="window.verDocumentoOrden()" class="text-blue-600 font-bold hover:underline">Ver Doc</button></td>
+                                            </tr>
+                                            <tr class="hover:bg-slate-50 transition">
+                                                <td class="py-4 font-bold">Insumos Médicos CR <span class="block text-xs text-slate-500 font-normal">Gasas, Jeringas, Sueros</span></td>
+                                                <td class="py-4">₡480,000</td>
+                                                <td class="py-4"><span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold">Recibido</span></td>
+                                                <td class="py-4"><button onclick="window.liquidarOrden()" class="text-blue-600 font-bold hover:underline">Liquidar</button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <!-- Proveedores Rápidos -->
+                            <div class="bg-white p-6 rounded-[2rem] border shadow-sm">
+                                <h3 class="font-black text-xl mb-6">Directorio Rápido</h3>
+                                <div class="space-y-4">
+                                    <div onclick="alert('Llamando a PharmaVet S.A...')" class="p-4 border rounded-xl hover:border-blue-500 transition cursor-pointer">
+                                        <p class="font-bold">PharmaVet S.A.</p>
+                                        <p class="text-xs text-slate-500 mt-1"><i class="fas fa-phone mr-1"></i> 800-PHARMA</p>
+                                    </div>
+                                    <div onclick="alert('Llamando a ProPet Distribuidora...')" class="p-4 border rounded-xl hover:border-blue-500 transition cursor-pointer">
+                                        <p class="font-bold">ProPet Distribuidora</p>
+                                        <p class="text-xs text-slate-500 mt-1"><i class="fas fa-phone mr-1"></i> 2222-3333</p>
+                                    </div>
+                                    <button onclick="alert('Mostrando lista completa de proveedores...')" class="w-full mt-4 text-xs font-bold text-blue-600 text-center hover:underline">Ver Todos los Proveedores</button>
                                 </div>
                             </div>
                         </div>
                     `;
                     break;
-                case 'agendar':
-                    title.innerText = "Reservar Cita Médica";
+
+                case 'envios': // JEFE
+                    title.innerText = "Logística y Medicamentos a Domicilio";
                     html = `
-                        <div class="bg-white p-12 rounded-[3rem] border shadow-2xl max-w-2xl mx-auto">
-                            <div class="space-y-6">
+                        <div class="bg-white p-8 rounded-[2rem] border shadow-sm">
+                            <div class="flex gap-4 mb-8">
+                                <input type="text" placeholder="Buscar pedido o cliente..." class="flex-1 bg-slate-50 border p-3 rounded-xl outline-none focus:border-blue-600 font-medium">
+                                <button onclick="window.buscarEnvio()" class="bg-blue-600 text-white px-6 rounded-xl font-bold">Buscar</button>
+                            </div>
+                            <table class="w-full text-left">
+                                <thead class="text-xs text-slate-400 uppercase font-black border-b">
+                                    <tr><th class="pb-3">ID Pedido</th><th class="pb-3">Contenido</th><th class="pb-3">Destino (Ruta)</th><th class="pb-3">Estado Motorizado</th></tr>
+                                </thead>
+                                <tbody class="text-sm">
+                                    <tr class="border-b hover:bg-slate-50">
+                                        <td class="py-5 font-mono text-slate-500">#ENV-482</td>
+                                        <td class="py-5 font-bold">Tratamiento Post-Operatorio MAX</td>
+                                        <td class="py-5">Escazú, Condominio 4, Casa 12</td>
+                                        <td class="py-5">
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                                <span class="font-bold text-amber-700">En Ruta (Carlos M.)</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="py-5 font-mono text-slate-500">#ENV-483</td>
+                                        <td class="py-5 font-bold">Alimento Renal (15kg)</td>
+                                        <td class="py-5">Santa Ana, Centro Médico</td>
+                                        <td class="py-5">
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-2 h-2 rounded-full bg-slate-300"></span>
+                                                <span class="font-bold text-slate-600">Preparando Paquete</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                    break;
+
+                case 'agendar': // CLIENTE
+                    title.innerText = "Reservar Nueva Cita";
+                    html = `
+                        <div class="bg-white p-8 md:p-12 rounded-[3rem] border shadow-xl max-w-2xl mx-auto">
+                            <form id="form-cita" onsubmit="event.preventDefault(); window.agendarCita(this);" class="space-y-6">
                                 <div>
-                                    <label class="text-xs font-black uppercase text-slate-400">Seleccionar Médico</label>
-                                    <select class="w-full p-4 mt-2 bg-slate-100 rounded-2xl outline-none font-bold">
-                                        <option>Dr. Roberto Vargas (Cirugía)</option>
-                                        <option>Dra. Maria Elena (Dermatología)</option>
+                                    <label class="text-xs font-black uppercase text-slate-400 ml-2">Mascota a atender</label>
+                                    <select name="mascotaId" class="w-full p-4 mt-1 bg-slate-50 rounded-2xl border focus:border-blue-600 outline-none font-bold text-slate-700">
+                                        <option value="pet1">MAX (Golden Retriever)</option>
+                                        <option value="pet2">LUNA (Gato Siamés)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="text-xs font-black uppercase text-slate-400 ml-2">Seleccionar Especialista</label>
+                                    <select name="medicoId" class="w-full p-4 mt-1 bg-slate-50 rounded-2xl border focus:border-blue-600 outline-none font-bold text-slate-700">
+                                        <option value="med1">Dr. Roberto Vargas (Cirugía General)</option>
+                                        <option value="med2">Dra. Maria Elena (Dermatología)</option>
+                                        <option value="med3">Dr. Carlos Fuentes (Medicina Interna)</option>
                                     </select>
                                 </div>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <input type="date" class="p-4 bg-slate-100 rounded-2xl font-bold outline-none border-2 focus:border-blue-600">
-                                    <input type="time" class="p-4 bg-slate-100 rounded-2xl font-bold outline-none border-2 focus:border-blue-600">
+                                    <div>
+                                        <label class="text-xs font-black uppercase text-slate-400 ml-2">Fecha</label>
+                                        <input type="date" name="fecha" required class="w-full p-4 mt-1 bg-slate-50 rounded-2xl border focus:border-blue-600 outline-none font-bold text-slate-700">
+                                    </div>
+                                    <div>
+                                        <label class="text-xs font-black uppercase text-slate-400 ml-2">Hora (Bloques de 45m)</label>
+                                        <select name="hora" required class="w-full p-4 mt-1 bg-slate-50 rounded-2xl border focus:border-blue-600 outline-none font-bold text-slate-700">
+                                            <option>09:00 AM</option><option>10:00 AM</option><option>11:00 AM</option>
+                                            <option>02:00 PM</option><option>03:00 PM</option><option>04:00 PM</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="p-6 bg-blue-50 rounded-2xl border border-blue-200">
-                                    <p class="text-sm font-bold text-blue-800 italic">Monto a pagar para agendar: ₡15,000[cite: 1]</p>
-                                    <p class="text-[10px] uppercase font-black text-blue-400 mt-2 italic">Método: SINPE Móvil al 8888-8888</p>
+                                <div class="p-6 bg-blue-50 rounded-2xl border border-blue-200 mt-8 relative overflow-hidden">
+                                    <i class="fas fa-shield-alt absolute right-4 top-1/2 -translate-y-1/2 text-5xl text-blue-100"></i>
+                                    <p class="text-sm font-black text-blue-900 relative z-10">Monto de reserva: ₡15,000</p>
+                                    <p class="text-xs text-blue-700 mt-1 font-medium relative z-10">Realiza tu pago vía SINPE Móvil al <strong>8888-8888</strong> a nombre de CANAAN VET.</p>
+                                    <input type="text" placeholder="N° Comprobante SINPE" required class="w-full p-3 mt-3 bg-white rounded-xl border-blue-200 outline-none font-mono text-sm relative z-10">
                                 </div>
-                                <button class="w-full bg-blue-600 text-white py-5 rounded-3xl font-black text-xl shadow-xl">RESERVAR MI ESPACIO</button>
+                                <button type="submit" class="w-full bg-blue-600 text-white py-5 rounded-[2rem] font-black text-xl shadow-xl hover:bg-blue-700 hover:shadow-blue-600/30 transition duration-300">
+                                    CONFIRMAR Y AGENDAR ESPACIO
+                                </button>
+                            </form>
+                        </div>
+                    `;
+                    break;
+                
+                case 'citas': // MEDICO
+                    title.innerText = "Mi Agenda Diaria";
+                    html = `
+                        <div class="bg-white rounded-[2rem] border overflow-hidden shadow-sm">
+                            <!-- Filtros -->
+                            <div class="p-6 border-b flex gap-4 bg-slate-50 items-center">
+                                <h3 class="font-black text-lg mr-auto">Hoy: ${new Date().toLocaleDateString('es-ES', {weekday: 'long', day:'numeric', month:'long'})}</h3>
+                                <button onclick="window.verCalendarioCompleto()" class="bg-white border px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-slate-50">Calendario Completo</button>
+                            </div>
+                            
+                            <!-- Lista de citas -->
+                            <div class="divide-y">
+                                <!-- Item -->
+                                <div class="p-6 flex flex-col md:flex-row gap-6 items-center hover:bg-slate-50 transition">
+                                    <div class="text-center md:text-left min-w-[120px]">
+                                        <p class="text-2xl font-black text-blue-600">09:00 AM</p>
+                                        <p class="text-xs text-slate-400 font-bold uppercase">45 min</p>
+                                    </div>
+                                    <div class="flex-1 flex gap-4 items-center w-full">
+                                        <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=150" class="w-16 h-16 rounded-2xl object-cover shadow-sm">
+                                        <div>
+                                            <p class="font-black text-lg">MAX <span class="text-xs font-normal text-slate-500 ml-2">Golden Retriever</span></p>
+                                            <p class="text-sm text-slate-600 mt-1"><i class="fas fa-user-circle mr-1"></i> Dueño: Juan Pérez | <i class="fas fa-phone mx-1"></i> 8888-1111</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-2 w-full md:w-auto">
+                                        <button onclick="window.loadWindow('intervenciones')" class="flex-1 bg-blue-100 text-blue-700 px-4 py-3 rounded-xl font-bold hover:bg-blue-200 transition text-sm text-center">Ver Expediente</button>
+                                        <button onclick="window.loadWindow('intervenciones')" class="flex-1 bg-slate-900 text-white px-4 py-3 rounded-xl font-bold hover:bg-slate-800 transition text-sm text-center">Iniciar Consulta</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Item -->
+                                <div class="p-6 flex flex-col md:flex-row gap-6 items-center hover:bg-slate-50 transition opacity-60">
+                                    <div class="text-center md:text-left min-w-[120px]">
+                                        <p class="text-2xl font-black text-slate-500">11:00 AM</p>
+                                        <p class="text-xs text-slate-400 font-bold uppercase">Checkup</p>
+                                    </div>
+                                    <div class="flex-1 flex gap-4 items-center w-full">
+                                        <div class="w-16 h-16 rounded-2xl bg-slate-200 flex items-center justify-center text-slate-400 text-2xl shadow-sm"><i class="fas fa-cat"></i></div>
+                                        <div>
+                                            <p class="font-black text-lg">LUNA <span class="text-xs font-normal text-slate-500 ml-2">Gato Siamés</span></p>
+                                            <p class="text-sm text-slate-600 mt-1">Control de vacunas anual</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     `;
                     break;
-                case 'perfil':
-                    title.innerText = "Configuración de Mi Perfil";
+
+                case 'mascotas': // CLIENTE o PACIENTES MEDICO
+                case 'pacientes':
+                    title.innerText = currentUser.role === ROLES.MEDICO ? "Pacientes Activos" : "Mis Mascotas";
                     html = `
-                        <div class="bg-white p-12 rounded-[3rem] border shadow-sm max-w-xl">
+                        <div class="mb-8 flex justify-end">
+                            <button onclick="window.registrarMascota()" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:bg-blue-700 transition">
+                                <i class="fas fa-plus mr-2"></i> ${currentUser.role === ROLES.MEDICO ? 'Agregar Nuevo Paciente' : 'Registrar Nueva Mascota'}
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Card Mascota -->
+                            <div class="bg-white rounded-[2rem] border overflow-hidden shadow-sm hover:shadow-xl transition group">
+                                <div class="h-48 overflow-hidden relative">
+                                    <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=400" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                                    <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-black shadow-sm">ID: MAX-01</div>
+                                </div>
+                                <div class="p-6">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <h3 class="font-black text-2xl">MAX</h3>
+                                        <span class="bg-blue-50 text-blue-600 px-2 py-1 rounded-md text-xs font-bold">5 Años</span>
+                                    </div>
+                                    <p class="text-sm text-slate-500 mb-6">Golden Retriever • Macho • Esterilizado</p>
+                                    
+                                    <div class="grid grid-cols-2 gap-2 mb-6">
+                                        <div class="bg-slate-50 p-3 rounded-xl text-center">
+                                            <p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Última Visita</p>
+                                            <p class="text-xs font-bold">Hace 2 meses</p>
+                                        </div>
+                                        <div class="bg-slate-50 p-3 rounded-xl text-center">
+                                            <p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Próx Vacuna</p>
+                                            <p class="text-xs font-bold text-amber-600">15 Oct 2026</p>
+                                        </div>
+                                    </div>
+
+                                    <button onclick="window.loadWindow('historial')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 py-3 rounded-xl font-bold transition text-sm">
+                                        Ver Expediente Clínico
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'historial':
+                case 'intervenciones':
+                    title.innerText = "Expediente Clínico Digital";
+                    html = `
+                        <div class="flex flex-col lg:flex-row gap-6">
+                            <!-- Info Resumen -->
+                            <div class="lg:w-1/3 space-y-6">
+                                <div class="bg-white p-6 rounded-[2rem] border shadow-sm text-center">
+                                    <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=200" class="w-32 h-32 rounded-full mx-auto object-cover border-4 border-blue-50 shadow-md mb-4">
+                                    <h3 class="font-black text-2xl">MAX</h3>
+                                    <p class="text-slate-500 text-sm">Golden Retriever • 32kg</p>
+                                    
+                                    <div class="mt-6 flex justify-center gap-2">
+                                        <button onclick="window.exportToPDF()" class="bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+                                            <i class="fas fa-file-pdf"></i> Exportar PDF
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-white p-6 rounded-[2rem] border shadow-sm">
+                                    <h4 class="font-bold mb-4 text-sm uppercase text-slate-400">Patologías Previas</h4>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="bg-slate-100 text-slate-700 px-3 py-1 rounded-lg text-xs font-medium">Dermatitis Alérgica (2025)</span>
+                                        <span class="bg-slate-100 text-slate-700 px-3 py-1 rounded-lg text-xs font-medium">Otitis (2024)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Timeline Clínico -->
+                            <div class="lg:w-2/3 bg-white p-8 rounded-[2rem] border shadow-sm">
+                                <div class="flex justify-between items-center mb-8 border-b pb-4">
+                                    <h3 class="font-black text-xl">Historial de Intervenciones</h3>
+                                    ${currentUser.role === ROLES.MEDICO || currentUser.role === ROLES.JEFE ? `<button onclick="window.agregarNotaMedica()" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 shadow">+ Agregar Nota Médica</button>` : ''}
+                                </div>
+                                
+                                <div class="relative border-l-2 border-slate-100 ml-3 space-y-10 pb-8">
+                                    <!-- Event 1 -->
+                                    <div class="relative pl-8">
+                                        <div class="absolute -left-[9px] top-1 w-4 h-4 bg-blue-600 rounded-full border-4 border-white shadow-sm"></div>
+                                        <div class="bg-slate-50 border p-5 rounded-2xl">
+                                            <div class="flex justify-between items-start mb-2">
+                                                <div>
+                                                    <h4 class="font-bold text-lg text-slate-800">Cirugía Dental (Profilaxis y Extracción)</h4>
+                                                    <p class="text-xs font-bold text-blue-600 mt-1">Dr. Roberto Vargas</p>
+                                                </div>
+                                                <span class="text-xs font-bold text-slate-400">02 May 2026</span>
+                                            </div>
+                                            <p class="text-sm text-slate-600 mt-3 leading-relaxed">
+                                                Paciente ingresa para limpieza profunda. Se aplicó anestesia general inhalada. Extracción de pieza premolar superior derecha por fractura. Recuperación exitosa sin complicaciones.
+                                            </p>
+                                            <div class="mt-4 pt-4 border-t flex gap-2">
+                                                <span class="text-[10px] bg-blue-100 text-blue-800 px-2 py-1 rounded">RX Dental</span>
+                                                <span class="text-[10px] bg-amber-100 text-amber-800 px-2 py-1 rounded">Receta: Meloxicam 2mg</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Event 2 -->
+                                    <div class="relative pl-8">
+                                        <div class="absolute -left-[9px] top-1 w-4 h-4 bg-slate-300 rounded-full border-4 border-white"></div>
+                                        <div>
+                                            <div class="flex justify-between items-start">
+                                                <h4 class="font-bold text-slate-800">Consulta Control Dermatología</h4>
+                                                <span class="text-xs font-bold text-slate-400">15 Ene 2026</span>
+                                            </div>
+                                            <p class="text-sm text-slate-500 mt-1">Revisión de alergia cutánea. Mejora notable con el cambio a alimento hidrolizado.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                
+                case 'pagos':
+                case 'perfil':
+                    title.innerText = id === 'pagos' ? "Control de Finanzas" : "Configuración del Perfil";
+                    html = `
+                        <div class="bg-white p-10 md:p-12 rounded-[3rem] border shadow-sm max-w-2xl mx-auto">
+                            <h3 class="font-black text-2xl mb-8">Datos de Perfil</h3>
                             <div class="space-y-6">
-                                <div><label class="text-xs font-black text-slate-400 uppercase">Nombre Completo</label>
-                                <input type="text" value="${currentUser.name}" class="w-full p-4 bg-slate-50 rounded-xl mt-2 font-bold outline-none border-2 focus:border-blue-600"></div>
-                                <div><label class="text-xs font-black text-slate-400 uppercase">Cambiar Contraseña</label>
-                                <input type="password" placeholder="Nueva Contraseña" class="w-full p-4 bg-slate-50 rounded-xl mt-2 font-bold outline-none border-2 focus:border-blue-600"></div>
-                                <button class="bg-slate-900 text-white px-10 py-4 rounded-2xl font-black">GUARDAR CAMBIOS</button>
+                                <div>
+                                    <label class="text-xs font-black text-slate-400 uppercase ml-2">Nombre Completo</label>
+                                    <input type="text" value="${currentUser.name}" class="w-full p-4 bg-slate-50 rounded-2xl mt-1 font-bold outline-none border focus:border-blue-600 text-slate-800">
+                                </div>
+                                <div>
+                                    <label class="text-xs font-black text-slate-400 uppercase ml-2">Rol Asignado</label>
+                                    <input type="text" value="${currentUser.role}" disabled class="w-full p-4 bg-slate-100 rounded-2xl mt-1 font-bold text-slate-500 cursor-not-allowed">
+                                </div>
+                                <div class="pt-6 border-t mt-6">
+                                    <label class="text-xs font-black text-slate-400 uppercase ml-2">Cambiar Contraseña</label>
+                                    <input type="password" placeholder="Ingresa nueva contraseña" class="w-full p-4 bg-slate-50 rounded-2xl mt-1 font-bold outline-none border focus:border-blue-600">
+                                </div>
+                                <button onclick="alert('Cambios guardados exitosamente.')" class="w-full bg-slate-900 text-white px-10 py-5 rounded-2xl font-black text-lg hover:bg-slate-800 transition shadow-lg mt-4">
+                                    GUARDAR CAMBIOS
+                                </button>
                             </div>
                         </div>
                     `;
                     break;
             }
             content.innerHTML = html;
+        };
+
+        // ==========================================
+        // LÓGICA DE NEGOCIO (CITAS Y EMERGENCIAS)
+        // ==========================================
+        
+        window.agendarCita = async (form) => {
+            const btn = form.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = "PROCESANDO...";
+            btn.disabled = true;
+
+            try {
+                await new Promise(r => setTimeout(r, 1500));
+                alert("¡Cita agendada con éxito! Su espacio ha sido reservado.");
+                window.loadWindow('historial');
+            } catch(e) {
+                alert("Error al agendar.");
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        };
+
+        window.reportarEmergencia = async () => {
+            if(confirm("¿Estás seguro de reportar una EMERGENCIA MÉDICA? Esto alertará a todos los médicos de turno de inmediato.")) {
+                try {
+                    alert("⚠️ ALERTA ENVIADA. Nuestro equipo ha sido notificado. Diríjase a la clínica de inmediato.");
+                    mostrarAlertaEmergencia({
+                        tipo_urgencia: "Reporte de Usuario (Simulado)",
+                        status: "activa",
+                        hora: new Date().toLocaleTimeString()
+                    });
+                } catch(e) {
+                    console.error("Error reportando emergencia", e);
+                }
+            }
+        };
+
+        function escucharEmergencias() {
+            console.log("Servicio de escucha de emergencias activado.");
         }
 
-        function exportToPDF() {
+        function mostrarAlertaEmergencia(data) {
+            const container = document.getElementById('emergency-banner-container');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = "w-full bg-red-600 text-white p-4 shadow-2xl flex justify-center items-center gap-6 animate-pulse border-b-4 border-red-800";
+            alertDiv.innerHTML = `
+                <div class="flex items-center gap-4">
+                    <i class="fas fa-exclamation-triangle text-3xl"></i>
+                    <div>
+                        <p class="font-black text-xl leading-none">CÓDIGO ROJO - PACIENTE EN CAMINO</p>
+                        <p class="text-sm font-bold text-red-200">Motivo: ${data.tipo_urgencia || 'Urgencia no especificada'} | Hora: ${data.hora}</p>
+                    </div>
+                </div>
+                <button onclick="this.parentElement.remove()" class="bg-red-800 hover:bg-red-900 px-6 py-2 rounded-xl font-bold ml-8 transition">
+                    Marcar Recibido
+                </button>
+            `;
+            container.prepend(alertDiv);
+            
+            try {
+                const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+                audio.play().catch(e => console.log("Auto-play blocked"));
+            } catch(e){}
+        }
+
+        // ==========================================
+        // EXPORTACIÓN PDF
+        // ==========================================
+        window.exportToPDF = () => {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
+            
+            doc.setFillColor(37, 99, 235);
+            doc.rect(0, 0, 210, 40, 'F');
+            doc.setTextColor(255, 255, 255);
             doc.setFont("helvetica", "bold");
-            doc.text("HISTORIAL CLÍNICO CANAAN VET", 20, 20);
+            doc.setFontSize(22);
+            doc.text("CANAAN VETERINARIA", 20, 25);
+            
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(16);
+            doc.text("Expediente Clínico Oficial", 20, 55);
+            
             doc.setFontSize(10);
-            doc.text("Paciente: MAX | Médico: Dr. Roberto Vargas", 20, 30);
-            doc.text("--------------------------------------------------", 20, 35);
-            doc.text("Resumen: Cirugía de limpieza dental y extracción.", 20, 45);
+            doc.setFont("helvetica", "normal");
+            doc.text("Paciente: MAX (Golden Retriever)", 20, 65);
+            doc.text("ID Paciente: MAX-01", 20, 70);
+            doc.text("Propietario: Juan Pérez", 20, 75);
+            
+            doc.setDrawColor(200, 200, 200);
+            doc.line(20, 85, 190, 85);
+
+            doc.setFont("helvetica", "bold");
+            doc.text("ÚLTIMA INTERVENCIÓN: 02 May 2026", 20, 95);
+            doc.setFont("helvetica", "normal");
+            
+            const text = "Paciente ingresa para limpieza profunda. Se aplicó anestesia general inhalada. Extracción de pieza premolar superior derecha por fractura. Recuperación exitosa sin complicaciones. Receta: Meloxicam 2mg por 5 días.";
+            const splitText = doc.splitTextToSize(text, 170);
+            doc.text(splitText, 20, 105);
+
             doc.save("Expediente_MAX.pdf");
-            alert("PDF Generado con éxito");
-        }
+        };
+
     </script>
 </body>
 </html>
